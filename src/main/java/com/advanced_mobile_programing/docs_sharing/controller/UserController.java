@@ -14,10 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -84,6 +81,20 @@ public class UserController {
             throw new RuntimeException("Passwords not matched");
         }
 
+    }
+
+    @Operation(summary = "Lấy thông tin cá nhân")
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile() {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not found"));
+        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+
+        return ResponseEntity.ok(ResponseModel.builder()
+                .status(200)
+                .error(false)
+                .message("Get profile successfully")
+                .data(userResponseModel)
+                .build());
     }
 
 }

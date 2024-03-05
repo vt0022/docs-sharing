@@ -82,6 +82,9 @@ public class SecurityConfig {
                                 "/api/v1/users/password",
                                 "/api/v1/users/avatar").authenticated()
 
+                        .requestMatchers(
+                                "/api/v1/post/**").authenticated()
+
                         .anyRequest().authenticated())
 
                 .securityContext((securityContext) -> securityContext.securityContextRepository(securityContextRepository())) // Add Security Context Holder Repository

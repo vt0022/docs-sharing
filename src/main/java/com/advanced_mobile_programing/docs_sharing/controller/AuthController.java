@@ -84,7 +84,7 @@ public class AuthController {
         }
 
         // Role
-        Role role = roleService.findById(UUID.fromString("c0a801b9-8ac0-1a60-818a-c04a8f950035")).orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleService.findById(3).orElseThrow(() -> new RuntimeException("Role not found"));
         User newUser = modelMapper.map(signupRequest, User.class);
         newUser.setRole(role);
         newUser = userService.save(newUser);

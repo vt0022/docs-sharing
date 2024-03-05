@@ -1,20 +1,18 @@
-package com.advanced_mobile_programing.docs_sharing.model;
+package com.advanced_mobile_programing.docs_sharing.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleModel implements Serializable {
-    @Serial
+public class UserDocument implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int id;
+    private User user;
 
-    private String roleName;
+    private Document document;
 }

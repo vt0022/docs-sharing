@@ -1,20 +1,15 @@
 package com.advanced_mobile_programing.docs_sharing.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,8 +22,8 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Column(unique = true, nullable = false)
     private String roleName;

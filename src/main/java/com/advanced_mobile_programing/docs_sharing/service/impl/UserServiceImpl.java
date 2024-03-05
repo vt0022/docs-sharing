@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -45,13 +44,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void deleteById(UUID uuid) {
-        userRepository.deleteById(uuid);
+    public void deleteById(int id) {
+        userRepository.deleteById(id);
     }
 
     @Override
-    public Optional<User> findById(UUID uuid) {
-        return userRepository.findById(uuid);
+    public Optional<User> findById(int id) {
+        return userRepository.findById(id);
     }
 
     @Override
