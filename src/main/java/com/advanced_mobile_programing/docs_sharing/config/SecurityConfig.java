@@ -85,6 +85,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/post/**").authenticated()
 
+                        .requestMatchers(
+                                "/api/v1/document/**").authenticated()
+
                         .anyRequest().authenticated())
 
                 .securityContext((securityContext) -> securityContext.securityContextRepository(securityContextRepository())) // Add Security Context Holder Repository

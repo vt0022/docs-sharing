@@ -13,5 +13,4 @@ import java.util.Optional;
 public interface IPostLikeRepository extends JpaRepository<PostLike, UserPost> {
     Optional<PostLike> findByUserAndPost(User user, Post post);
 
-    void deleteByUserAndPost(User user, Post post);
 }

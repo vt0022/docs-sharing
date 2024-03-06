@@ -33,9 +33,6 @@ public class Document {
     @Column(nullable = false)
     private String downloadUrl;
 
-    @Column(nullable = false, unique = true)
-    private String slug;
-
     private Timestamp uploadedAt;
 
     private Timestamp updatedAt;
@@ -57,7 +54,7 @@ public class Document {
     private Field field;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DocumentLike> DocumentLike = new ArrayList<>();
+    private List<DocumentLike> documentLikes = new ArrayList<>();
 
 
     @PrePersist
