@@ -43,7 +43,7 @@ public class Document {
 
     @ManyToOne
     @JoinColumn(name = "uploadedBy")
-    private User userUploaded;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "categoryId")

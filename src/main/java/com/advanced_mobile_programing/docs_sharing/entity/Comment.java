@@ -25,7 +25,7 @@ public class Comment {
 
     private Timestamp updatedAt;
 
-    @OneToMany(mappedBy = "parentComment")
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> childComments = new ArrayList<>();
 
     @ManyToOne
@@ -37,7 +37,7 @@ public class Comment {
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "commentedBy")
     private User user;
 
     @PrePersist

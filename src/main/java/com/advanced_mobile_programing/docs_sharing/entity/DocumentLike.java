@@ -29,6 +29,8 @@ public class DocumentLike implements Serializable {
     @JoinColumn(name = "docId")
     private Document document;
 
+    private boolean isLiked;
+
     private Timestamp likedAt;
 
     @PrePersist

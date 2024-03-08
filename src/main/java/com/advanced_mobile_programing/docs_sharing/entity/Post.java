@@ -27,11 +27,11 @@ public class Post {
 
     private Timestamp updatedAt;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "postedBy")
-    private User userPosted;
+    private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany
@@ -46,12 +46,17 @@ public class Post {
 
     @PrePersist
     protected void onCreate() {
-        updatedAt = new Timestamp(System.currentTimeMillis());
+        createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    @PreRemove
+    private void removeTags() {
+        tags.clear();
     }
 }

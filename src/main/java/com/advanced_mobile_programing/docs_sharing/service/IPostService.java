@@ -12,4 +12,9 @@ public interface IPostService {
     Page<Post> searchAll(String order, String q, Pageable pageable);
 
     Optional<Post> findById(Integer integer);
+
+    void save(Post post);
+
+    void deletePost(int postId);
+
 }

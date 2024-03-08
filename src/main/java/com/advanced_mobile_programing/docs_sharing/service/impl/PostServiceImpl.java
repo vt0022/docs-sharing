@@ -35,4 +35,14 @@ public class PostServiceImpl implements IPostService {
     public Optional<Post> findById(Integer integer) {
         return postRepository.findById(integer);
     }
+
+    @Override
+    public void save(Post post) {
+        postRepository.save(post);
+    }
+
+    @Override
+    public void deletePost(int postId) {
+        postRepository.deleteById(postId);
+    }
 }

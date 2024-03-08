@@ -3,6 +3,7 @@ package com.advanced_mobile_programing.docs_sharing.controller;
 import com.advanced_mobile_programing.docs_sharing.entity.Post;
 import com.advanced_mobile_programing.docs_sharing.entity.PostLike;
 import com.advanced_mobile_programing.docs_sharing.entity.User;
+import com.advanced_mobile_programing.docs_sharing.model.request_model.PostCreateRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.PostResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
 import com.advanced_mobile_programing.docs_sharing.service.IPostLikeService;
@@ -102,6 +103,49 @@ public class PostController {
                 .status(200)
                 .error(false)
                 .message(isLiked ? "Unlike" : "Like" + " post successfully")
+                .build());
+    }
+
+    @Operation(summary = "Đăng bài viết mới",
+            description = "Tạo một bài viết mới")
+    @PostMapping("/create")
+    public ResponseEntity<?> createPost(@RequestBody PostCreateRequestModel postCreateRequestModel) {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+
+        Post post = new Post();
+        post.setTitle(postCreateRequestModel.getTitle());
+        post.setContent(postCreateRequestModel.getContent());
+        post.setUser(user);
+
+        postService.save(post);
+
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Post created successfully")
+                .build());
+    }
+
+    @Operation(summary = "Xóa bài đăng",
+            description = "Xóa bài đăng theo id")
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable int postId) {
+        User loggedInUser = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+        Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // Kiểm tra xem người dùng đã đăng nhập và có quyền xóa bài viết hay không
+        if (!(loggedInUser != null && (loggedInUser.getRole().getId() == 1 || post.getUser().equals(loggedInUser)))) {
+            throw new RuntimeException("You don't have permission to delete this post");
+        }
+
+        // Xóa bài viết nếu người dùng đã đăng nhập và có quyền xóa bài viết
+        postService.deletePost(postId);
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Post deleted successfully")
                 .build());
     }
 

@@ -22,8 +22,6 @@ public class Tag {
 
     private String name;
 
-    private String slug;
-
     private Timestamp createdAt;
 
     private Timestamp updatedAt;
