@@ -54,6 +54,8 @@ public class User implements Serializable, UserDetails {
 
     private boolean isDisabled;
 
+    private boolean isAuthenticated;
+
     @ManyToOne
     @JoinColumn(name = "roleId")
     private Role role;

@@ -66,7 +66,10 @@ public class AuthController {
         Optional<User> user = userService.findByEmail(signupRequest.getEmail());
 
         if (user.isPresent()) {
-            throw new RuntimeException("Email already registered");
+            if (user.get().isAuthenticated())
+                throw new RuntimeException("Email already registered");
+            else
+                throw new RuntimeException("Account needs activated");
         }
 
         if (!signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
@@ -93,7 +96,7 @@ public class AuthController {
         ResponseModel signupResponse = new ResponseModel().builder()
                 .status(200)
                 .error(false)
-                .message("Sign up successfully. Please log in.")
+                .message("Sign up successfully. Please verify first.")
                 .data(userResponseModel)
                 .build();
         return ResponseEntity.ok(signupResponse);
@@ -104,21 +107,26 @@ public class AuthController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestModel.getEmail(), loginRequestModel.getPassword()));
         } catch (Exception e) {
-            Optional optionalUser = userService.findByEmailAndIsDisabled(loginRequestModel.getEmail(), false);
+            Optional<User> optionalUser = userService.findByEmail(loginRequestModel.getEmail());
             if (!optionalUser.isPresent())
                 throw new BadCredentialsException("Email not registered");
             else
                 throw new BadCredentialsException("Wrong password");
         }
 
-        User user = userService.findByEmailAndIsDisabled(loginRequestModel.getEmail(), false).orElseThrow(() -> new UsernameNotFoundException("Email not registered"));
-        Role role = user.getRole();
+        Optional<User> user = userService.findByEmail(loginRequestModel.getEmail());
+        if (user.get().isDisabled())
+            throw new RuntimeException("Account disabled");
+        else if (!user.get().isAuthenticated())
+            throw new RuntimeException("Account needs activated");
+
+        Role role = user.get().getRole();
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         // Generate JWT
-        var jwtToken = jwtService.generateToken(user, authorities);
-        var jwtRefreshToken = jwtService.generateRefreshToken(user);
+        var jwtToken = jwtService.generateToken(user.get(), authorities);
+        var jwtRefreshToken = jwtService.generateRefreshToken(user.get());
 
         AuthModel authResponse = AuthModel.builder()
                 .accessToken(jwtToken)
@@ -135,7 +143,8 @@ public class AuthController {
 
     @Operation(summary = "Send email with OTP")
     @PostMapping("/sendEmail")
-    public ResponseEntity<?> sendResetPasswordEmail(@RequestParam String email) {
+    public ResponseEntity<?> sendResetPasswordEmail(@RequestParam String email,
+                                                    @RequestParam(defaultValue = "reset") String type) {
         User user = userService.findByEmail(email).orElseThrow(() -> new RuntimeException("Email not registered"));
 
         Random random = new Random();
@@ -155,22 +164,31 @@ public class AuthController {
         verificationCode.setExpired(false);
         verificationCodeService.save(verificationCode);
 
-        emailService.sendEmail(
-                email,
-                "RESET PASSWORD",
-                code,
-                "reset_password_email");
+        if (type.equals("reset"))
+            emailService.sendEmail(
+                    email,
+                    "RESET PASSWORD",
+                    code,
+                    "reset_password_email");
+        else // register
+            emailService.sendEmail(
+                    email,
+                    "VERIFY ON REGISTER",
+                    code,
+                    "verify_on_signup_email");
 
         return ResponseEntity.ok(ResponseModel.builder()
                 .status(200)
                 .error(false)
-                .message("Send reset password code successfully")
+                .message("Send code successfully")
                 .build());
     }
 
     @Operation(summary = "Verify OTP from email")
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyUser(@RequestParam String email, @RequestParam int code) {
+    public ResponseEntity<?> verifyUser(@RequestParam String email,
+                                        @RequestParam int code,
+                                        @RequestParam(defaultValue = "reset") String type) {
         User user = userService.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
         VerificationCode verificationCode = verificationCodeService.findByUser(user).orElseThrow(() -> new RuntimeException("Invalid verification code"));
@@ -183,10 +201,14 @@ public class AuthController {
                     verificationCode.setExpired(true);
                     verificationCodeService.save(verificationCode);
 
+                    if (type.equals("register")) {
+                        user.setAuthenticated(true);
+                        userService.update(user);
+                    }
                     return ResponseEntity.ok(ResponseModel.builder()
                             .status(200)
                             .error(false)
-                            .message("Verify user successfully")
+                            .message("Verify user successfully on " + (type.equals("reset") ? "resetting" : "registering"))
                             .build());
                 } else throw new RuntimeException("Verification code is expired");
 

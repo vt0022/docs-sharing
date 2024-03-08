@@ -59,8 +59,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Optional<User> findByEmailAndIsDisabled(String email, boolean isDisabled) {
-        return userRepository.findByEmailAndIsDisabled(email, isDisabled);
+    public Optional<User> findByEmailAndIsDisabledAndIsAuthenticated(String email, boolean isDisabled, boolean isAuthenticated) {
+        return userRepository.findByEmailAndIsDisabledAndIsAuthenticated(email, isDisabled, isAuthenticated);
     }
 
     @Override

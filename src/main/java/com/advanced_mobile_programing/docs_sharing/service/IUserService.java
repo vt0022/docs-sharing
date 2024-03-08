@@ -19,7 +19,7 @@ public interface IUserService {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByEmailAndIsDisabled(String email, boolean isDisabled);
+    Optional<User> findByEmailAndIsDisabledAndIsAuthenticated(String email, boolean isDisabled, boolean isAuthenticated);
 
     Optional<User> findLoggedInUser();
 }

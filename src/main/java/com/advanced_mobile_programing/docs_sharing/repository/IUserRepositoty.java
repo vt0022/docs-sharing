@@ -11,6 +11,6 @@ public interface IUserRepositoty extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByEmailAndIsDisabled(String email, boolean isDisabled);
+    Optional<User> findByEmailAndIsDisabledAndIsAuthenticated(String email, boolean isDisabled, boolean isAuthenticated);
 
 }

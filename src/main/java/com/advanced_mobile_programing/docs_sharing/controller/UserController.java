@@ -63,7 +63,7 @@ public class UserController {
             description = "Người dùng khôi phục mật khẩu")
     @PutMapping("/password/reset")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
-        User user = userService.findByEmailAndIsDisabled(passwordResetRequestModel.getEmail(), false).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.findByEmailAndIsDisabledAndIsAuthenticated(passwordResetRequestModel.getEmail(), false, true).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!new PasswordCheck().validatePassword(passwordResetRequestModel.getNewPassword())) {
             throw new RuntimeException("Invalid password format");
