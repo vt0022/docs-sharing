@@ -13,4 +13,8 @@ public interface IDocumentService {
     Page<Document> searchAll(String q, List<Integer> categories, List<Integer> fields, String order, Pageable pageable);
 
     Optional<Document> findById(int docId);
+
+    void save(Document document);
+
+    void delete(int docId);
 }

@@ -1,5 +1,7 @@
 package com.advanced_mobile_programing.docs_sharing.model.response_model;
 
+import com.advanced_mobile_programing.docs_sharing.model.lean_model.CategoryLeanModel;
+import com.advanced_mobile_programing.docs_sharing.model.lean_model.FieldLeanModel;
 import com.advanced_mobile_programing.docs_sharing.model.lean_model.UserLeanModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,4 +41,8 @@ public class DocumentResponseModel implements Serializable {
     private boolean isLiked;
 
     private UserLeanModel user;
+
+    private CategoryLeanModel category;
+
+    private FieldLeanModel field;
 }

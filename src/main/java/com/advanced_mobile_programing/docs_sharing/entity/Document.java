@@ -61,6 +61,12 @@ public class Document {
     protected void onCreate() {
         uploadedAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
+        totalView = 0;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
 }

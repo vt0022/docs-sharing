@@ -31,8 +31,4 @@ public class UserRequestModel implements Serializable {
     private String password;
 
     private String confirmPassword;
-
-    private UUID orgId;
-
-    private UUID roleId;
 }

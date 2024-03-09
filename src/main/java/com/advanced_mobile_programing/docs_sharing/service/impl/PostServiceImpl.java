@@ -42,7 +42,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public void deletePost(int postId) {
+    public void delete(int postId) {
         postRepository.deleteById(postId);
     }
 }

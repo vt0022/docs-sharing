@@ -3,7 +3,7 @@ package com.advanced_mobile_programing.docs_sharing.controller;
 import com.advanced_mobile_programing.docs_sharing.entity.Post;
 import com.advanced_mobile_programing.docs_sharing.entity.PostLike;
 import com.advanced_mobile_programing.docs_sharing.entity.User;
-import com.advanced_mobile_programing.docs_sharing.model.request_model.PostCreateRequestModel;
+import com.advanced_mobile_programing.docs_sharing.model.request_model.PostRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.PostResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
 import com.advanced_mobile_programing.docs_sharing.service.IPostLikeService;
@@ -106,29 +106,78 @@ public class PostController {
                 .build());
     }
 
+    @Operation(summary = "Xem 1 bài đăng cụ thể",
+            description = "Xem 1 bài đăng cụ thể")
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getPost(@PathVariable int postId) {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+
+        Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        PostResponseModel postResponseModels = convertToDocumentModel(post);
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .data(postResponseModels)
+                .build());
+    }
+
     @Operation(summary = "Đăng bài viết mới",
             description = "Tạo một bài viết mới")
     @PostMapping("/create")
-    public ResponseEntity<?> createPost(@RequestBody PostCreateRequestModel postCreateRequestModel) {
+    public ResponseEntity<?> createPost(@RequestBody PostRequestModel postRequestModel) {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
 
         Post post = new Post();
-        post.setTitle(postCreateRequestModel.getTitle());
-        post.setContent(postCreateRequestModel.getContent());
+        post.setTitle(postRequestModel.getTitle());
+        post.setContent(postRequestModel.getContent());
         post.setUser(user);
 
         postService.save(post);
+
+        PostResponseModel postResponseModels = convertToDocumentModel(post);
 
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
                 .error(false)
                 .message("Post created successfully")
+                .data(postResponseModels)
                 .build());
     }
 
+    @Operation(summary = "Chỉnh sửa bài đăng",
+            description = "Người dùng chỉ có quyền chỉnh sửa bài đăng của mình")
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> updatePost(@PathVariable int postId, @RequestBody PostRequestModel postRequestModel) {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+        Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // Kiểm tra xem người dùng có quyền chỉnh sửa bài đăng hay không
+        if (!(post.getUser().equals(user))) {
+            throw new RuntimeException("You don't have permission to update this post");
+        }
+
+        // Cập nhật thông tin bài đăng
+        post.setTitle(postRequestModel.getTitle());
+        post.setContent(postRequestModel.getContent());
+        postService.save(post);
+
+        PostResponseModel postResponseModels = convertToDocumentModel(post);
+
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Post updated successfully")
+                .data(postResponseModels)
+                .build());
+    }
+
+
     @Operation(summary = "Xóa bài đăng",
-            description = "Xóa bài đăng theo id")
+            description = "Người dùng chỉ có quyền xóa bài đăng của mình. Admin có quyền xóa bất kỳ bài đăng nào.")
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable int postId) {
         User loggedInUser = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
@@ -140,7 +189,7 @@ public class PostController {
         }
 
         // Xóa bài viết nếu người dùng đã đăng nhập và có quyền xóa bài viết
-        postService.deletePost(postId);
+        postService.delete(postId);
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)

@@ -101,4 +101,14 @@ public class DocumentServiceImpl implements IDocumentService {
     public Optional<Document> findById(int docId) {
         return documentRepository.findById(docId);
     }
+
+    @Override
+    public void save(Document document) {
+        documentRepository.save(document);
+    }
+
+    @Override
+    public void delete(int docId) {
+        documentRepository.deleteById(docId);
+    }
 }

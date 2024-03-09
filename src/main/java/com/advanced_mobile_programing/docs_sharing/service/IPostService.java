@@ -15,6 +15,6 @@ public interface IPostService {
 
     void save(Post post);
 
-    void deletePost(int postId);
+    void delete(int postId);
 
 }
