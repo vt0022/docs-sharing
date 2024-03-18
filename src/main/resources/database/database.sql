@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: docs_sharing
 -- ------------------------------------------------------
--- Server version	8.0.28
+-- Server version	8.0.31
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -64,7 +64,7 @@ CREATE TABLE `comment` (
   CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`commented_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`parent_comment_id`) REFERENCES `comment` (`comment_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,8 +73,36 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (1,1,10,NULL,'Cho mình xin với','2023-12-13 23:58:24.356000',NULL),(2,1,6,1,'Bạn comment email cho mình nha','2023-12-14 00:57:24.356000',NULL),(3,1,12,NULL,'Còn không bạn ơi!','2023-12-14 05:57:24.356000',NULL),(4,1,6,3,'Mình hỏi bạn mình thì bạn mình cũng có một cuốn, bạn cho mình xin email nha','2023-12-14 08:57:24.356000',NULL),(5,1,10,2,'thikieu1703@gmail.com, cảm ơn bạn nhiều','2023-12-14 09:57:24.356000',NULL),(6,1,12,4,'ngocphuc0808@gmail.com, cảm ơn bạn','2023-12-14 09:59:24.356000',NULL),(7,2,13,NULL,'Cho mình ké với ạ!','2023-12-14 23:58:25.183000',NULL),(8,2,15,NULL,'Cho mình ké nữa ạ!','2023-12-15 00:57:25.183000',NULL),(9,2,18,NULL,'Có ai có không ạ?','2023-12-15 05:57:25.183000',NULL),(10,2,6,NULL,'Nhiều người cùng câu hỏi quá','2023-12-15 08:57:25.183000',NULL),(11,3,15,NULL,'Mình bạn ơi!','2023-12-15 23:58:25.183000',NULL),(12,3,6,11,'Gửi email mình nha ','2023-12-16 00:57:25.183000',NULL);
+INSERT INTO `comment` VALUES (1,1,10,NULL,'Cho mình xin với','2023-12-13 23:58:24.356000',NULL),(2,1,6,1,'Bạn comment email cho mình nha bạn!','2023-12-14 00:57:24.356000','2024-03-18 14:21:29.818000'),(3,1,12,NULL,'Còn không bạn ơi!','2023-12-14 05:57:24.356000',NULL),(4,1,6,3,'Mình hỏi bạn mình thì bạn mình cũng có một cuốn, bạn cho mình xin email nha','2023-12-14 08:57:24.356000',NULL),(5,1,10,2,'thikieu1703@gmail.com, cảm ơn bạn nhiều','2023-12-14 09:57:24.356000',NULL),(6,1,12,4,'ngocphuc0808@gmail.com, cảm ơn bạn','2023-12-14 09:59:24.356000',NULL),(7,2,13,NULL,'Cho mình ké với ạ!','2023-12-14 23:58:25.183000',NULL),(8,2,15,NULL,'Cho mình ké nữa ạ!','2023-12-15 00:57:25.183000',NULL),(9,2,18,NULL,'Có ai có không ạ?','2023-12-15 05:57:25.183000',NULL),(10,2,6,NULL,'Nhiều người cùng câu hỏi quá','2023-12-15 08:57:25.183000',NULL),(11,3,15,NULL,'Mình bạn ơi!','2023-12-15 23:58:25.183000',NULL),(12,3,6,11,'Gửi email mình nha ','2023-12-16 00:57:25.183000',NULL);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `comment_like`
+--
+
+DROP TABLE IF EXISTS `comment_like`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comment_like` (
+  `comment_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `liked_at` datetime(6) DEFAULT NULL,
+  PRIMARY KEY (`comment_id`,`user_id`),
+  KEY `comment_like_ibfk_2_idx` (`user_id`),
+  CONSTRAINT `comment_like_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`comment_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `comment_like_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comment_like`
+--
+
+LOCK TABLES `comment_like` WRITE;
+/*!40000 ALTER TABLE `comment_like` DISABLE KEYS */;
+INSERT INTO `comment_like` VALUES (1,6,'2023-12-14 00:57:24.356000'),(1,7,'2023-12-14 00:58:24.356000'),(1,9,'2023-12-14 00:59:24.356000'),(1,10,'2023-12-14 01:00:24.356000'),(1,12,'2023-12-14 01:01:24.356000'),(1,13,'2023-12-14 01:02:24.356000'),(1,15,'2023-12-14 01:03:24.356000'),(1,29,'2023-12-14 01:04:24.356000'),(1,30,'2023-12-14 01:05:24.356000'),(2,10,'2023-12-14 01:06:24.356000'),(2,32,'2023-12-14 01:07:24.356000'),(2,33,'2023-12-14 01:08:24.356000'),(2,34,'2023-12-14 01:09:24.356000'),(5,6,'2023-12-14 09:58:24.356000'),(7,6,'2023-12-14 23:59:25.183000');
+/*!40000 ALTER TABLE `comment_like` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -104,7 +132,7 @@ CREATE TABLE `document` (
   CONSTRAINT `document_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `document_ibfk_2` FOREIGN KEY (`field_id`) REFERENCES `field` (`field_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `document_ibfk_3` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -190,7 +218,7 @@ CREATE TABLE `post` (
   PRIMARY KEY (`post_id`),
   KEY `post_ibfk_1_idx` (`posted_by`),
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,7 +227,7 @@ CREATE TABLE `post` (
 
 LOCK TABLES `post` WRITE;
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
-INSERT INTO `post` VALUES (1,'Mình có dư một cuốn sách Nhập môn lập trình\nBạn nào muốn lấy thì bình luận phía dưới nha!','2023-12-13 23:57:24.356000','Sách Nhập môn lập trình',NULL,6),(2,'Ai có pdf môn Triết học không, cho mình ké với!\nMình cảm ơn!','2023-12-14 23:57:25.183000','PDF Triết học',NULL,6),(3,'Mình có tài liệu Tóm tắt công thức lớp Vật lý 1 \nAi cần bình luận nha!','2023-12-15 23:57:25.183000','Công thức Vật lý 1',NULL,6),(4,'Có bạn nào có nhiều bài báo nghiên cứu về ứng dụng của Triết học không nhỉ?','2023-12-16 23:57:25.183000','Bài báo ứng dụng Triết học ',NULL,7),(5,'Có bạn nào có tài liệu để nghiên cứu đề tài bên dưới không, cho mình xin với!\nHigh-cell-density fermentations using Bacillus subtilis','2023-12-17 23:57:25.183000','High-cell-density fermentations using Bacillus subtilis',NULL,7),(6,'Có ai có PDF Tư tưởng Hồ Chí Minh mới nhất không ạ?','2023-12-18 11:57:25.183000','Tư tưởng HCM mới nhất',NULL,7),(7,'Mình có kiếm được vài sách Triết học khá hay, bạn nào tò mò thì vào trang cá nhân mình coi nha','2023-12-18 12:57:25.183000','Sách Triết học',NULL,9),(8,'Mình có bản dịch tài liệu hướng dẫn sử dụng CSDL mySQL \nBạn nào muốn xem thì vào trang mình ','2023-12-18 13:57:25.183000','HDSD mySQL',NULL,9),(9,'Mình có vài tài liệu học AI, vào trang mình để xem ','2023-12-18 14:57:25.183000','Học AI',NULL,9),(10,'Tài liệu bản dịch hướng dẫn sử dụng Intellij','2023-12-18 16:57:25.183000','HDSD Intellij',NULL,9),(11,'Mình có sưu tầm những bài thơ hay nhất của Xuân Diệu, bạn nào muốn đọc thì qua trang mình','2023-12-18 17:57:25.183000','Thơ Xuân Diệu',NULL,6),(12,'Ai có sách An toàn thông tin nào giải thích chi tiết dễ hiểu không, cho mình xin với!','2023-12-18 18:57:25.183000','An toàn thông tin ',NULL,6);
+INSERT INTO `post` VALUES (1,'Mình có dư một cuốn sách Nhập môn lập trình\nBạn nào muốn lấy thì bình luận phía dưới nha!','2023-12-13 23:57:24.356000','Sách Nhập môn lập trình',NULL,6),(2,'Ai có pdf môn Triết học không, cho mình ké với!\nMình cảm ơn!','2023-12-14 23:57:25.183000','PDF Triết học',NULL,6),(3,'Mình có tài liệu Tóm tắt công thức lớp Vật lý 1 \nAi cần bình luận nha!','2023-12-15 23:57:25.183000','Công thức Vật lý 1',NULL,6),(4,'Có bạn nào có nhiều bài báo nghiên cứu về ứng dụng của Triết học không nhỉ?','2023-12-16 23:57:25.183000','Bài báo ứng dụng Triết học ',NULL,7),(5,'Có bạn nào có tài liệu để nghiên cứu đề tài bên dưới không, cho mình xin với!\nHigh-cell-density fermentations using Bacillus subtilis','2023-12-17 23:57:25.183000','High-cell-density fermentations using Bacillus subtilis',NULL,7),(6,'Có ai có PDF Tư tưởng Hồ Chí Minh mới nhất không ạ?','2023-12-18 11:57:25.183000','Tư tưởng HCM mới nhất',NULL,7),(7,'Mình có kiếm được vài sách Triết học khá hay, bạn nào tò mò thì vào trang cá nhân mình coi nha','2023-12-18 12:57:25.183000','Sách Triết học',NULL,9),(8,'Mình có bản dịch tài liệu hướng dẫn sử dụng CSDL mySQL \nBạn nào muốn xem thì vào trang mình ','2023-12-18 13:57:25.183000','HDSD mySQL',NULL,9),(9,'Mình có vài tài liệu học AI, vào trang mình để xem ','2023-12-18 14:57:25.183000','Học AI',NULL,9),(10,'Tài liệu bản dịch hướng dẫn sử dụng Intellij','2023-12-18 16:57:25.183000','HDSD Intellij',NULL,9),(11,'Mình có sưu tầm những bài thơ hay nhất của Xuân Diệu, bạn nào muốn đọc thì qua trang mình','2023-12-18 17:57:25.183000','Thơ Xuân Diệu',NULL,6),(12,'Ai có sách An toàn thông tin nào giải thích chi tiết dễ hiểu không, cho mình xin với!','2023-12-18 18:57:25.183000','An toàn thông tin ',NULL,6),(15,'Có tài liệu nào hướng dẫn dùng Swagger UI không nhỉ? Tiếng Việt càng tốt ạ! Mình cảm ơn!','2024-03-09 19:50:58.721000','Có tài liệu nào hướng dẫn dùng Swagger UI không nhỉ? Tiếng Việt càng tốt ạ!','2024-03-09 19:51:44.280000',47);
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -386,4 +414,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-09  0:36:39
+-- Dump completed on 2024-03-18 18:15:17

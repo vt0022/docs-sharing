@@ -46,7 +46,7 @@ public class PostController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Post> posts = postService.findAll(pageable);
-        Page<PostResponseModel> postResponseModels = posts.map(this::convertToDocumentModel);
+        Page<PostResponseModel> postResponseModels = posts.map(this::convertToPostModel);
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
@@ -55,6 +55,29 @@ public class PostController {
                 .data(postResponseModels)
                 .build());
     }
+
+    @Operation(summary = "Xem danh sách bài đăng đã thích",
+            description = "Trả về danh sách tất cả bài đăng mà người dùng hiện tại đã thích")
+    @GetMapping("/liked")
+    public ResponseEntity<?> getLikedPosts(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size) {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "likedAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<PostLike> likedPosts = postLikeService.findAllByUser(user, pageable);
+        Page<PostResponseModel> postResponseModels = likedPosts.map(postLike -> convertToPostModel(postLike.getPost()));
+
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Get liked posts successfully")
+                .data(postResponseModels)
+                .build());
+    }
+
 
     @Operation(summary = "Tìm kiếm bài đăng",
             description = "Trả về danh sách tất cả bài đăng tìm được kèm với sắp xếp")
@@ -67,7 +90,7 @@ public class PostController {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Post> posts = postService.searchAll(order, q, pageable);
-        Page<PostResponseModel> postResponseModels = posts.map(this::convertToDocumentModel);
+        Page<PostResponseModel> postResponseModels = posts.map(this::convertToPostModel);
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
@@ -114,7 +137,7 @@ public class PostController {
 
         Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 
-        PostResponseModel postResponseModels = convertToDocumentModel(post);
+        PostResponseModel postResponseModels = convertToPostModel(post);
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
@@ -136,7 +159,7 @@ public class PostController {
 
         postService.save(post);
 
-        PostResponseModel postResponseModels = convertToDocumentModel(post);
+        PostResponseModel postResponseModels = convertToPostModel(post);
 
         return ResponseEntity.ok(ResponseModel
                 .builder()
@@ -164,7 +187,7 @@ public class PostController {
         post.setContent(postRequestModel.getContent());
         postService.save(post);
 
-        PostResponseModel postResponseModels = convertToDocumentModel(post);
+        PostResponseModel postResponseModels = convertToPostModel(post);
 
         return ResponseEntity.ok(ResponseModel
                 .builder()
@@ -198,7 +221,7 @@ public class PostController {
                 .build());
     }
 
-    private PostResponseModel convertToDocumentModel(Post post) {
+    private PostResponseModel convertToPostModel(Post post) {
         PostResponseModel postResponseModel = modelMapper.map(post, PostResponseModel.class);
 
         int totalLikes = post.getPostLikes().size();

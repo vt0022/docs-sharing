@@ -6,6 +6,8 @@ import com.advanced_mobile_programing.docs_sharing.entity.User;
 import com.advanced_mobile_programing.docs_sharing.repository.IPostLikeRepository;
 import com.advanced_mobile_programing.docs_sharing.service.IPostLikeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,5 +34,10 @@ public class PostLikeServiceImpl implements IPostLikeService {
     @Override
     public void delete(PostLike entity) {
         postLikeRepository.delete(entity);
+    }
+
+    @Override
+    public Page<PostLike> findAllByUser(User user, Pageable pageable) {
+        return postLikeRepository.findAllByUser(user, pageable);
     }
 }

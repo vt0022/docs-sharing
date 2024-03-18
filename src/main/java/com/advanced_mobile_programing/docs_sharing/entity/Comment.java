@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 
 @Entity
+@Table(name = "Comment")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,9 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "commentedBy")
     private User user;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
