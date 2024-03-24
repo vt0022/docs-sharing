@@ -39,4 +39,11 @@ public class Tag {
     protected void onUpdate() {
         updatedAt = new Timestamp(System.currentTimeMillis());
     }
+
+    @PreRemove
+    private void removePosts() {
+        for (Post post : posts) {
+            post.getTags().remove(this);
+        }
+    }
 }

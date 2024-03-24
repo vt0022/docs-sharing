@@ -31,7 +31,7 @@ public class Field {
 
     private boolean isDisabled;
 
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
 
     @PrePersist

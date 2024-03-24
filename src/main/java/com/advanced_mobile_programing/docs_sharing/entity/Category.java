@@ -31,7 +31,7 @@ public class Category {
 
     private boolean isDisabled;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
 
     @PrePersist

@@ -2,12 +2,14 @@ package com.advanced_mobile_programing.docs_sharing.controller;
 
 import com.advanced_mobile_programing.docs_sharing.entity.Post;
 import com.advanced_mobile_programing.docs_sharing.entity.PostLike;
+import com.advanced_mobile_programing.docs_sharing.entity.Tag;
 import com.advanced_mobile_programing.docs_sharing.entity.User;
 import com.advanced_mobile_programing.docs_sharing.model.request_model.PostRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.PostResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
 import com.advanced_mobile_programing.docs_sharing.service.IPostLikeService;
 import com.advanced_mobile_programing.docs_sharing.service.IPostService;
+import com.advanced_mobile_programing.docs_sharing.service.ITagService;
 import com.advanced_mobile_programing.docs_sharing.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequestMapping("/api/v1/post")
@@ -27,13 +30,15 @@ public class PostController {
     private final IPostService postService;
     private final IPostLikeService postLikeService;
     private IUserService userService;
+    private ITagService tagService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PostController(IPostService postService, IPostLikeService postLikeService, IUserService userService, ModelMapper modelMapper) {
+    public PostController(IPostService postService, IPostLikeService postLikeService, IUserService userService, ITagService tagService, ModelMapper modelMapper) {
         this.postService = postService;
         this.postLikeService = postLikeService;
         this.userService = userService;
+        this.tagService = tagService;
         this.modelMapper = modelMapper;
     }
 
@@ -155,6 +160,11 @@ public class PostController {
         Post post = new Post();
         post.setTitle(postRequestModel.getTitle());
         post.setContent(postRequestModel.getContent());
+
+        // Lấy danh sách Tag dựa trên tagIds
+        List<Tag> tags = tagService.findAllById(postRequestModel.getTagIds());
+
+        post.setTags(tags);
         post.setUser(user);
 
         postService.save(post);
@@ -185,6 +195,10 @@ public class PostController {
         // Cập nhật thông tin bài đăng
         post.setTitle(postRequestModel.getTitle());
         post.setContent(postRequestModel.getContent());
+        // Lấy danh sách Tag dựa trên tagIds
+        List<Tag> tags = tagService.findAllById(postRequestModel.getTagIds());
+
+        post.setTags(tags);
         postService.save(post);
 
         PostResponseModel postResponseModels = convertToPostModel(post);

@@ -29,7 +29,7 @@ CREATE TABLE `category` (
   `is_disabled` bit(1) NOT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (1,'Sách','2023-12-08 23:57:24.356000',_binary '\0',NULL),(2,'Bài hát','2023-12-08 23:57:24.356000',_binary '\0',NULL),(3,'Phim','2023-12-08 23:57:24.356000',_binary '\0',NULL),(4,'Món ăn','2023-12-08 23:57:24.356000',_binary '\0',NULL),(5,'Trò chơi','2023-12-08 23:57:24.356000',_binary '\0',NULL),(6,'Bài viết','2023-12-08 23:57:24.356000',_binary '\0',NULL),(7,'Bức tranh','2023-12-08 23:57:24.356000',_binary '\0',NULL),(8,'Tòa nhà','2023-12-08 23:57:24.356000',_binary '\0',NULL),(9,'Phương tiện','2023-12-08 23:57:24.356000',_binary '\0',NULL),(10,'Động vật','2023-12-08 23:57:24.356000',_binary '\0',NULL),(11,'Loài cây','2023-12-08 23:57:24.356000',_binary '\0',NULL),(12,'Phần mềm','2023-12-08 23:57:24.356000',_binary '\0',NULL),(13,'Phần cứng','2023-12-08 23:57:24.356000',_binary '\0',NULL),(14,'Loại vải','2023-12-08 23:57:24.356000',_binary '\0',NULL),(15,'Báo','2023-12-08 23:57:24.356000',_binary '\0',NULL),(16,'Tài liệu','2023-12-08 23:57:24.356000',_binary '\0',NULL),(17,'Dụng cụ thể thao','2023-12-08 23:57:24.356000',_binary '\0',NULL),(18,'Loại đá quý','2023-12-08 23:57:24.356000',_binary '\0',NULL),(19,'Nhà xuất bản','2023-12-08 23:57:24.356000',_binary '\0',NULL),(20,'Loại bệnh','2023-12-08 23:57:24.356000',_binary '\0',NULL),(21,'Loại nhạc cụ','2023-12-08 23:57:24.356000',_binary '\0',NULL);
+INSERT INTO `category` VALUES (1,'Sách','2023-12-08 23:57:24.356000',_binary '\0',NULL),(2,'Bài hát','2023-12-08 23:57:25.356000',_binary '\0',NULL),(3,'Phim','2023-12-08 23:57:26.356000',_binary '\0',NULL),(4,'Món ăn','2023-12-08 23:57:24.356000',_binary '\0',NULL),(5,'Trò chơi','2023-12-08 23:57:27.356000',_binary '\0',NULL),(6,'Bài viết','2023-12-08 23:57:28.356000',_binary '\0',NULL),(7,'Bức tranh','2023-12-08 23:57:24.356000',_binary '\0',NULL),(8,'Tòa nhà','2023-12-08 23:57:29.356000',_binary '\0',NULL),(9,'Phương tiện','2023-12-08 23:57:30.356000',_binary '\0',NULL),(10,'Động vật','2023-12-08 23:57:24.356000',_binary '\0',NULL),(11,'Loài cây','2023-12-08 23:57:24.356000',_binary '\0',NULL),(12,'Phần mềm','2023-12-08 23:57:31.356000',_binary '\0',NULL),(13,'Phần cứng','2023-12-08 23:57:34.356000',_binary '\0',NULL),(14,'Loại vải','2023-12-08 23:57:44.356000',_binary '\0',NULL),(15,'Báo','2023-12-08 23:57:24.356000',_binary '\0',NULL),(16,'Tài liệu','2023-12-08 23:57:24.356000',_binary '\0',NULL),(17,'Dụng cụ thể thao','2023-12-08 23:57:24.356000',_binary '\0',NULL),(18,'Loại đá quý','2023-12-08 23:57:47.356000',_binary '\0',NULL),(19,'Nhà xuất bản','2023-12-08 23:57:46.356000',_binary '\0',NULL),(20,'Loại bệnh','2023-12-08 23:57:45.356000',_binary '\0',NULL),(21,'Loại nhạc cụ','2023-12-08 23:57:44.356000',_binary '\0',NULL),(24,'Loài nấm','2024-03-24 12:12:17.677000',_binary '\0','2024-03-24 12:12:17.677000');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,7 +132,7 @@ CREATE TABLE `document` (
   CONSTRAINT `document_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `document_ibfk_2` FOREIGN KEY (`field_id`) REFERENCES `field` (`field_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `document_ibfk_3` FOREIGN KEY (`uploaded_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,7 +188,7 @@ CREATE TABLE `field` (
   `created_at` datetime(6) DEFAULT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`field_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,7 +197,7 @@ CREATE TABLE `field` (
 
 LOCK TABLES `field` WRITE;
 /*!40000 ALTER TABLE `field` DISABLE KEYS */;
-INSERT INTO `field` VALUES (1,'Văn học',_binary '\0','2023-12-08 23:57:24.356000',NULL),(2,'Âm nhạc',_binary '\0','2023-12-08 23:57:24.356000',NULL),(3,'Điện ảnh',_binary '\0','2023-12-08 23:57:24.356000',NULL),(4,'Ẩm thực',_binary '\0','2023-12-08 23:57:24.356000',NULL),(5,'Phát triển bản thân',_binary '\0','2023-12-08 23:57:24.356000',NULL),(6,'Báo chí',_binary '\0','2023-12-08 23:57:24.356000',NULL),(7,'Hội họa',_binary '\0','2023-12-08 23:57:24.356000',NULL),(8,'Kiến trúc',_binary '\0','2023-12-08 23:57:24.356000',NULL),(9,'Giao thông vận tải',_binary '\0','2023-12-08 23:57:24.356000',NULL),(10,'Sinh học',_binary '\0','2023-12-08 23:57:24.356000',NULL),(11,'Kỹ năng giao tiếp',_binary '\0','2023-12-08 23:57:24.356000',NULL),(12,'Công nghệ thông tin',_binary '\0','2023-12-08 23:57:24.356000',NULL),(13,'Thời trang',_binary '\0','2023-12-08 23:57:24.356000',NULL),(14,'Thể thao',_binary '\0','2023-12-08 23:57:24.356000',NULL),(15,'Địa chất',_binary '\0','2023-12-08 23:57:24.356000',NULL),(16,'Xuất bản',_binary '\0','2023-12-08 23:57:24.356000',NULL),(17,'Công nghiệp ô tô',_binary '\0','2023-12-08 23:57:24.356000',NULL),(18,'Y học',_binary '\0','2023-12-08 23:57:24.356000',NULL),(19,'Đầu tư - Kinh doanh',_binary '\0','2023-12-08 23:57:24.356000',NULL),(20,'Ngoại ngữ',_binary '\0','2023-12-08 23:57:24.356000',NULL),(21,'Tâm linh',_binary '\0','2023-12-08 23:57:24.356000',NULL);
+INSERT INTO `field` VALUES (1,'Văn học',_binary '\0','2023-12-08 23:57:24.356000',NULL),(2,'Âm nhạc',_binary '\0','2023-12-08 23:57:25.356000',NULL),(3,'Điện ảnh',_binary '\0','2023-12-08 23:57:26.356000',NULL),(4,'Ẩm thực',_binary '\0','2023-12-08 23:57:27.356000',NULL),(5,'Phát triển bản thân',_binary '\0','2023-12-08 23:57:28.356000',NULL),(6,'Báo chí',_binary '\0','2023-12-08 23:57:29.356000',NULL),(7,'Hội họa',_binary '\0','2023-12-08 23:57:30.356000',NULL),(8,'Kiến trúc',_binary '\0','2023-12-08 23:57:24.356000',NULL),(9,'Giao thông vận tải',_binary '\0','2023-12-08 23:57:34.356000',NULL),(10,'Sinh học',_binary '\0','2023-12-08 23:57:35.356000',NULL),(11,'Kỹ năng giao tiếp',_binary '\0','2023-12-08 23:57:36.356000',NULL),(12,'Công nghệ thông tin',_binary '\0','2023-12-08 23:57:37.356000',NULL),(13,'Thời trang',_binary '\0','2023-12-08 23:57:24.356000',NULL),(14,'Thể thao',_binary '\0','2023-12-08 23:57:38.356000',NULL),(15,'Địa chất',_binary '\0','2023-12-08 23:57:39.356000',NULL),(16,'Xuất bản',_binary '\0','2023-12-08 23:57:40.356000',NULL),(17,'Công nghiệp ô tô',_binary '\0','2023-12-08 23:57:24.356000',NULL),(18,'Y học',_binary '\0','2023-12-08 23:57:24.356000',NULL),(19,'Đầu tư - Kinh doanh',_binary '\0','2023-12-08 23:57:24.356000',NULL),(20,'Ngoại ngữ',_binary '\0','2023-12-08 23:57:24.356000',NULL),(21,'Tâm linh',_binary '\0','2023-12-08 23:57:24.356000',NULL);
 /*!40000 ALTER TABLE `field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,7 +218,7 @@ CREATE TABLE `post` (
   PRIMARY KEY (`post_id`),
   KEY `post_ibfk_1_idx` (`posted_by`),
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -324,7 +324,7 @@ CREATE TABLE `tag` (
   `name` varchar(255) NOT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`tag_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -333,7 +333,7 @@ CREATE TABLE `tag` (
 
 LOCK TABLES `tag` WRITE;
 /*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-INSERT INTO `tag` VALUES (1,'2023-12-08 23:57:24.356000','CNTT',NULL),(2,'2023-12-08 23:57:24.356000','IT',NULL),(3,'2023-12-08 23:57:24.356000','Triết học',NULL),(4,'2023-12-08 23:57:24.356000','Vật lý',NULL),(5,'2023-12-08 23:57:24.356000','Đại học',NULL),(6,'2023-12-08 23:57:24.356000','Hóa sinh',NULL),(7,'2023-12-08 23:57:24.356000','Tư tưởng Hồ Chí Minh',NULL),(8,'2023-12-08 23:57:24.356000','CSDL',NULL),(9,'2023-12-08 23:57:24.356000','AI',NULL),(10,'2023-12-08 23:57:24.356000','IDE',NULL),(11,'2023-12-08 23:57:24.356000','Xuân Diệu',NULL),(12,'2023-12-08 23:57:24.356000','An toàn thông tin',NULL);
+INSERT INTO `tag` VALUES (1,'2023-12-08 23:57:24.356000','CNTT',NULL),(2,'2023-12-08 23:57:25.356000','IT',NULL),(3,'2023-12-08 23:57:24.356000','Triết học',NULL),(4,'2023-12-08 23:57:26.356000','Vật lý',NULL),(5,'2023-12-08 23:57:24.356000','Đại học',NULL),(6,'2023-12-08 23:57:27.356000','Hóa sinh',NULL),(7,'2023-12-08 23:57:24.356000','Tư tưởng Hồ Chí Minh',NULL),(8,'2023-12-08 23:57:28.356000','CSDL',NULL),(9,'2023-12-08 23:57:24.356000','AI',NULL),(10,'2023-12-08 23:57:29.356000','IDE',NULL),(11,'2023-12-08 23:57:24.356000','Xuân Diệu',NULL),(12,'2023-12-08 23:57:30.356000','An toàn thông tin',NULL);
 /*!40000 ALTER TABLE `tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -414,4 +414,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-18 18:15:17
+-- Dump completed on 2024-03-24 15:09:18
