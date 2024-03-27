@@ -3,6 +3,7 @@ package com.advanced_mobile_programing.docs_sharing.service.impl;
 import com.advanced_mobile_programing.docs_sharing.entity.Category;
 import com.advanced_mobile_programing.docs_sharing.entity.Document;
 import com.advanced_mobile_programing.docs_sharing.entity.Field;
+import com.advanced_mobile_programing.docs_sharing.entity.User;
 import com.advanced_mobile_programing.docs_sharing.repository.IDocumentRepository;
 import com.advanced_mobile_programing.docs_sharing.service.ICategoryService;
 import com.advanced_mobile_programing.docs_sharing.service.IDocumentService;
@@ -110,5 +111,10 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public void delete(int docId) {
         documentRepository.deleteById(docId);
+    }
+
+    @Override
+    public Page<Document> findByUser(User user, Pageable pageable) {
+        return documentRepository.findByUser(user, pageable);
     }
 }

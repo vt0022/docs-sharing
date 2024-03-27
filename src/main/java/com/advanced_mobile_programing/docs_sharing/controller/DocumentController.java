@@ -37,6 +37,28 @@ public class DocumentController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(summary = "Lấy tất cả tài liệu của một người dùng",
+            description = "Trả về danh sách tất cả tài liệu của một người dùng")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getDocumentsByUser(@PathVariable int userId,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size) {
+        User user = userService.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Sort sort = Sort.by(Sort.Direction.DESC, "uploadedAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Document> documents = documentService.findByUser(user, pageable);
+        Page<DocumentResponseModel> documentResponseModels = documents.map(this::convertToDocumentModel);
+
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Get documents by user successfully")
+                .data(documentResponseModels)
+                .build());
+    }
+
     @Operation(summary = "Xem danh sách tài liệu",
             description = "Trả về danh sách tất cả tài liệu")
     @GetMapping("/all")

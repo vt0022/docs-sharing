@@ -3,6 +3,7 @@ package com.advanced_mobile_programing.docs_sharing.repository;
 import com.advanced_mobile_programing.docs_sharing.entity.Category;
 import com.advanced_mobile_programing.docs_sharing.entity.Document;
 import com.advanced_mobile_programing.docs_sharing.entity.Field;
+import com.advanced_mobile_programing.docs_sharing.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -61,4 +62,5 @@ public interface IDocumentRepository extends JpaRepository<Document, Integer> {
             "ORDER BY SIZE(d.documentLikes) DESC")
     Page<Document> findAllByFieldsOrderByLikes(String q, List<Field> fields, Pageable pageable);
 
+    Page<Document> findByUser(User user, Pageable pageable);
 }
