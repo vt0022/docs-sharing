@@ -1,6 +1,7 @@
 package com.advanced_mobile_programing.docs_sharing.service;
 
 import com.advanced_mobile_programing.docs_sharing.entity.Document;
+import com.advanced_mobile_programing.docs_sharing.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,4 +18,6 @@ public interface IDocumentService {
     void save(Document document);
 
     void delete(int docId);
+
+    Page<Document> findByUser(User user, Pageable pageable);
 }
