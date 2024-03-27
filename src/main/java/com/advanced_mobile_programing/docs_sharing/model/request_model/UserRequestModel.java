@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -24,11 +23,11 @@ public class UserRequestModel implements Serializable {
 
     private int gender;
 
-    private String phone;
-
     private String email;
 
     private String password;
 
     private String confirmPassword;
+
+    private int roleId = 3;
 }

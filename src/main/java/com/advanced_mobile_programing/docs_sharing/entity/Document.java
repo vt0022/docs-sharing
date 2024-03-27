@@ -39,6 +39,7 @@ public class Document {
 
     private int totalView;
 
+    @Column(nullable = true)
     private String thumbnail;
 
     @ManyToOne

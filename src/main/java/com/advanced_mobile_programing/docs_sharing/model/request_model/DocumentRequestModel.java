@@ -18,9 +18,6 @@ public class DocumentRequestModel implements Serializable {
 
     private String docName;
     private String docIntroduction;
-    private String viewUrl;
-    private String downloadUrl;
-    private String thumbnail;
     private int categoryId;
     private int fieldId;
 }

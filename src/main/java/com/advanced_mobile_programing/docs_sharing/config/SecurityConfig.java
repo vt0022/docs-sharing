@@ -51,16 +51,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()) // Xem xét lại nếu bị lỗi 403
 
-//                .cors(cors -> cors.configurationSource(request -> {
-//                    final CorsConfiguration cs = new CorsConfiguration();
-//                    cs.setAllowedOrigins(List.of(request.getHeader("Origin")));
-//                    cs.setAllowCredentials(true);
-//                    cs.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "HEAD", "DELETE", "OPTIONS"));
-//                    cs.setAllowedHeaders(List.of("Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Authorization"));
-//                    cs.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Authorization"));
-//                    return cs;
-//                }))
-
                 .anonymous(anonymous -> anonymous.disable())
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -77,10 +67,15 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/api/v1/users/password/reset").permitAll()
+
                         .requestMatchers(
-                                "/api/v1/users/profile",
+                                "/api/v1/users/password/reset",
                                 "/api/v1/users/password",
-                                "/api/v1/users/avatar").authenticated()
+                                "/api/v1/users/profile",
+                                "/api/v1/users/avatar",
+                                "/api/v1/users/password/reset").hasAuthority("ROLE_STUDENT")
+                        .requestMatchers(
+                                "/api/v1/users/*").hasAuthority("ROLE_ADMIN")
 
                         .requestMatchers(
                                 "/api/v1/post/**").authenticated()

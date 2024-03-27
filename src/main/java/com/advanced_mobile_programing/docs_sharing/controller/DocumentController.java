@@ -1,21 +1,27 @@
 package com.advanced_mobile_programing.docs_sharing.controller;
 
 import com.advanced_mobile_programing.docs_sharing.entity.*;
+import com.advanced_mobile_programing.docs_sharing.model.FileModel;
 import com.advanced_mobile_programing.docs_sharing.model.request_model.DocumentRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.DocumentResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
 import com.advanced_mobile_programing.docs_sharing.service.*;
+import com.advanced_mobile_programing.docs_sharing.util.GoogleDriveUpload;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RequestMapping("/api/v1/document")
 @RestController
@@ -25,15 +31,17 @@ public class DocumentController {
     private final IUserService userService;
     private final ICategoryService categoryService;
     private final IFieldService fieldService;
+    private final GoogleDriveUpload googleDriveUpload;
     private final ModelMapper modelMapper;
 
 
-    public DocumentController(IDocumentService documentService, IDocumentLikeService documentLikeService, IUserService userService, ICategoryService categoryService, IFieldService fieldService, ModelMapper modelMapper) {
+    public DocumentController(IDocumentService documentService, IDocumentLikeService documentLikeService, IUserService userService, ICategoryService categoryService, IFieldService fieldService, GoogleDriveUpload googleDriveUpload, ModelMapper modelMapper) {
         this.documentService = documentService;
         this.documentLikeService = documentLikeService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.fieldService = fieldService;
+        this.googleDriveUpload = googleDriveUpload;
         this.modelMapper = modelMapper;
     }
 
@@ -104,7 +112,7 @@ public class DocumentController {
                 .builder()
                 .status(200)
                 .error(false)
-                .message(isLiked ? "Unlike" : "Like" + " document successfully")
+                .message((isLiked ? "Unlike" : "Like") + " document successfully")
                 .build());
     }
 
@@ -124,19 +132,18 @@ public class DocumentController {
 
     @Operation(summary = "Đăng tài liệu mới",
             description = "Tạo một tài liệu mới")
-    @PostMapping("/create")
-    public ResponseEntity<?> createDocument(@RequestBody DocumentRequestModel documentRequestModel) {
+    @PostMapping(path = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createDocument(@RequestPart("doc") DocumentRequestModel documentRequestModel,
+                                            @RequestPart("file") MultipartFile multipartFile) {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
 
+        FileModel gd = googleDriveUpload.uploadFile(multipartFile, documentRequestModel.getDocName(), null);
         Category category = categoryService.findById(documentRequestModel.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Field field = fieldService.findById(documentRequestModel.getFieldId()).orElseThrow(() -> new RuntimeException("Field not found"));
 
-        Document document = new Document();
-        document.setDocName(documentRequestModel.getDocName());
-        document.setDocIntroduction(documentRequestModel.getDocIntroduction());
-        document.setViewUrl(documentRequestModel.getViewUrl());
-        document.setDownloadUrl(documentRequestModel.getDownloadUrl());
-        document.setThumbnail(documentRequestModel.getThumbnail());
+        Document document = modelMapper.map(documentRequestModel, Document.class);
+        document.setViewUrl(gd.getViewUrl());
+        document.setDownloadUrl(gd.getDownloadUrl());
         document.setUser(user);
         document.setCategory(category);
         document.setField(field);
@@ -157,8 +164,10 @@ public class DocumentController {
 
     @Operation(summary = "Chỉnh sửa tài liệu",
             description = "Người dùng chỉ có quyền chỉnh sửa tài liệu của mình")
-    @PutMapping("/{docId}")
-    public ResponseEntity<?> updateDocument(@PathVariable int docId, @RequestBody DocumentRequestModel documentRequestModel) {
+    @PutMapping(path = "/{docId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateDocument(@PathVariable int docId,
+                                            @RequestPart("doc") DocumentRequestModel documentRequestModel,
+                                            @RequestPart(name = "file", required = false) MultipartFile multipartFile) {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
         Document document = documentService.findById(docId).orElseThrow(() -> new RuntimeException("Document not found"));
 
@@ -170,12 +179,19 @@ public class DocumentController {
         Category category = categoryService.findById(documentRequestModel.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Field field = fieldService.findById(documentRequestModel.getFieldId()).orElseThrow(() -> new RuntimeException("Field not found"));
 
+        if (multipartFile != null) {
+            // Get id of old file and thumbnail file
+            String fileId = document.getViewUrl() != null ? getFileId(document.getViewUrl()) : null;
+            // Upload file
+            FileModel gd = googleDriveUpload.uploadFile(multipartFile, documentRequestModel.getDocName(), fileId);
+            // Update file properties for document without overwriting existing properties
+            document.setViewUrl(gd.getViewUrl());
+            document.setDownloadUrl(gd.getDownloadUrl());
+        }
+
         // Cập nhật thông tin tài liệu
         document.setDocName(documentRequestModel.getDocName());
         document.setDocIntroduction(documentRequestModel.getDocIntroduction());
-        document.setViewUrl(documentRequestModel.getViewUrl());
-        document.setDownloadUrl(documentRequestModel.getDownloadUrl());
-        document.setThumbnail(documentRequestModel.getThumbnail());
         document.setCategory(category);
         document.setField(field);
         documentService.save(document);
@@ -213,7 +229,7 @@ public class DocumentController {
                 .build());
     }
 
-    private DocumentResponseModel convertToDocumentModel(Document document) {
+    public DocumentResponseModel convertToDocumentModel(Document document) {
         DocumentResponseModel documentResponseModel = modelMapper.map(document, DocumentResponseModel.class);
 
         int totalLikes = document.getDocumentLikes().size();
@@ -224,5 +240,19 @@ public class DocumentController {
         documentResponseModel.setLiked(isLiked);
 
         return documentResponseModel;
+    }
+
+    public String getFileId(String url) {
+        String regex = "/file/d/([^/]+)/";
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(url);
+
+        if (matcher.find()) {
+            String fileId = matcher.group(1);
+            return fileId;
+        } else {
+            return null;
+        }
     }
 }
