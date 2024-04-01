@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -73,4 +74,22 @@ public class UserServiceImpl implements IUserService {
         String email = String.valueOf(auth.getPrincipal());
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public long countByCreatedAtYearAndMonth(int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+        return userRepository.countByCreatedAtBetween(start, end);
+    }
+
+    @Override
+    public long countAll() {
+        return userRepository.count();
+    }
+
+    @Override
+    public long countByCreatedAtYear(int year) {
+        return userRepository.countByCreatedAtYear(year);
+    }
+
 }

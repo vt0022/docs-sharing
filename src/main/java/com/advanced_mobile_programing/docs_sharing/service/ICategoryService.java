@@ -18,4 +18,10 @@ public interface ICategoryService {
     void save(Category category);
 
     void delete(Category category);
+
+    long countAll();
+
+    long countByCreatedAtYearAndMonth(int year, int month);
+
+    long countByCreatedAtYear(int year);
 }

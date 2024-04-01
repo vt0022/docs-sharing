@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,5 +73,22 @@ public class TagServiceImpl implements ITagService {
     @Override
     public List<Tag> findAllById(List<Integer> tagIds) {
         return tagRepository.findAllById(tagIds);
+    }
+
+    @Override
+    public long countAll() {
+        return tagRepository.count();
+    }
+
+    @Override
+    public long countByCreatedAtYearAndMonth(int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+        return tagRepository.countByCreatedAtBetween(start, end);
+    }
+
+    @Override
+    public long countByCreatedAtYear(int year) {
+        return tagRepository.countByCreatedAtYear(year);
     }
 }

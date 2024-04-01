@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface IFieldRepository extends JpaRepository<Field, Integer> {
     @Query("SELECT f FROM Field f WHERE LOWER(f.fieldName) LIKE :query ORDER BY SIZE(f.documents) DESC, f.createdAt DESC")
@@ -17,4 +19,10 @@ public interface IFieldRepository extends JpaRepository<Field, Integer> {
     Page<Field> findAll(@Param("query") String query, Pageable pageable);
 
     boolean existsByFieldName(String fieldName);
+
+    @Query("SELECT COUNT(f) FROM Field f WHERE f.createdAt >= :start AND f.createdAt < :end")
+    long countByCreatedAtBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query("SELECT COUNT(f) FROM Field f WHERE YEAR(f.createdAt) = :year")
+    int countByCreatedAtYear(@Param("year") int year);
 }

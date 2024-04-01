@@ -17,4 +17,9 @@ public interface IPostService {
 
     void delete(int postId);
 
+    long countByCreatedAtYearAndMonth(int year, int month);
+
+    long countAll();
+
+    long countByCreatedAtYear(int year);
 }

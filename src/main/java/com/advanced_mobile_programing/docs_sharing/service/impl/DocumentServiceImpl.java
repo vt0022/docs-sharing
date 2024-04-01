@@ -15,12 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DocumentServiceImpl implements IDocumentService {
+
     private final IDocumentRepository documentRepository;
     private final ICategoryService categoryService;
     private final IFieldService fieldService;
@@ -116,5 +118,22 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public Page<Document> findByUser(User user, Pageable pageable) {
         return documentRepository.findByUser(user, pageable);
+    }
+
+    @Override
+    public long countByUploadedAtYearAndMonth(int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+        return documentRepository.countByUploadedAtBetween(start, end);
+    }
+
+    @Override
+    public long countAll() {
+        return documentRepository.count();
+    }
+
+    @Override
+    public long countByUploadedAtYear(int year) {
+        return documentRepository.countByUploadedAtYear(year);
     }
 }

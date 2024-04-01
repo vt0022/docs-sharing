@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -65,6 +66,23 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public void delete(Category category) {
         categoryRepository.delete(category);
+    }
+
+    @Override
+    public long countAll() {
+        return categoryRepository.count();
+    }
+
+    @Override
+    public long countByCreatedAtYearAndMonth(int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+        return categoryRepository.countByCreatedAtBetween(start, end);
+    }
+
+    @Override
+    public long countByCreatedAtYear(int year) {
+        return categoryRepository.countByCreatedAtYear(year);
     }
 
 }

@@ -18,4 +18,10 @@ public interface IFieldService {
     void save(Field field);
 
     void delete(Field field);
+
+    long countAll();
+
+    long countByCreatedAtYearAndMonth(int year, int month);
+
+    long countByCreatedAtYear(int year);
 }

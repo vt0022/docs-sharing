@@ -22,4 +22,9 @@ public interface IUserService {
     Optional<User> findByEmailAndIsDisabledAndIsAuthenticated(String email, boolean isDisabled, boolean isAuthenticated);
 
     Optional<User> findLoggedInUser();
+    long countByCreatedAtYearAndMonth(int year, int month);
+
+    long countAll();
+
+    long countByCreatedAtYear(int year);
 }

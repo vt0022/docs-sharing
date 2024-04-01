@@ -21,4 +21,10 @@ public interface ITagService {
     void delete(Tag tag);
 
     List<Tag> findAllById(List<Integer> tagIds);
+
+    long countAll();
+
+    long countByCreatedAtYearAndMonth(int year, int month);
+
+    long countByCreatedAtYear(int year);
 }

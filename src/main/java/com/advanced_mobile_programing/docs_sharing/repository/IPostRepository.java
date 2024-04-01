@@ -5,7 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 
 @Repository
 public interface IPostRepository extends JpaRepository<Post, Integer> {
@@ -17,4 +20,10 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
             "WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(p.content) LIKE LOWER(CONCAT('%', :q, '%')) " +
             "ORDER BY SIZE(p.postLikes) DESC")
     Page<Post> findAllOrderByLikes(String q, Pageable pageable);
+
+    @Query("SELECT COUNT(p) FROM Post p WHERE p.createdAt >= :start AND p.createdAt < :end")
+    long countByCreatedAtBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query("SELECT COUNT(p) FROM Post p WHERE YEAR(p.createdAt) = :year")
+    long countByCreatedAtYear(@Param("year") int year);
 }

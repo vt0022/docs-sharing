@@ -20,4 +20,10 @@ public interface IDocumentService {
     void delete(int docId);
 
     Page<Document> findByUser(User user, Pageable pageable);
+
+    long countByUploadedAtYearAndMonth(int year, int month);
+
+    long countAll();
+
+    long countByUploadedAtYear(int year);
 }
