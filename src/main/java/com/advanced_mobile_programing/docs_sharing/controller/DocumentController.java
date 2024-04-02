@@ -18,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -33,16 +31,18 @@ public class DocumentController {
     private final IUserService userService;
     private final ICategoryService categoryService;
     private final IFieldService fieldService;
+    private final INotificationService notificationService;
     private final GoogleDriveUpload googleDriveUpload;
     private final ModelMapper modelMapper;
 
 
-    public DocumentController(IDocumentService documentService, IDocumentLikeService documentLikeService, IUserService userService, ICategoryService categoryService, IFieldService fieldService, GoogleDriveUpload googleDriveUpload, ModelMapper modelMapper) {
+    public DocumentController(IDocumentService documentService, IDocumentLikeService documentLikeService, IUserService userService, ICategoryService categoryService, IFieldService fieldService, INotificationService notificationService, GoogleDriveUpload googleDriveUpload, ModelMapper modelMapper) {
         this.documentService = documentService;
         this.documentLikeService = documentLikeService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.fieldService = fieldService;
+        this.notificationService = notificationService;
         this.googleDriveUpload = googleDriveUpload;
         this.modelMapper = modelMapper;
     }
@@ -151,6 +151,14 @@ public class DocumentController {
             like.setUser(user);
             like.setDocument(document);
             documentLikeService.save(like);
+
+            Notification notification = new Notification();
+            notification.setType("DOC_LIKE");
+            notification.setReferredId(document.getDocId());
+            notification.setUserReceived(document.getUser());
+            notification.setUserTriggered(user);
+            notification = notificationService.save(notification);
+            notificationService.notifyUser(document.getUser().getEmail(), notification);
         }
 
         return ResponseEntity.ok(ResponseModel

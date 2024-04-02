@@ -1,16 +1,10 @@
 package com.advanced_mobile_programing.docs_sharing.controller;
 
-import com.advanced_mobile_programing.docs_sharing.entity.Post;
-import com.advanced_mobile_programing.docs_sharing.entity.PostLike;
-import com.advanced_mobile_programing.docs_sharing.entity.Tag;
-import com.advanced_mobile_programing.docs_sharing.entity.User;
+import com.advanced_mobile_programing.docs_sharing.entity.*;
 import com.advanced_mobile_programing.docs_sharing.model.request_model.PostRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.PostResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
-import com.advanced_mobile_programing.docs_sharing.service.IPostLikeService;
-import com.advanced_mobile_programing.docs_sharing.service.IPostService;
-import com.advanced_mobile_programing.docs_sharing.service.ITagService;
-import com.advanced_mobile_programing.docs_sharing.service.IUserService;
+import com.advanced_mobile_programing.docs_sharing.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,16 +23,18 @@ import java.util.Optional;
 public class PostController {
     private final IPostService postService;
     private final IPostLikeService postLikeService;
-    private IUserService userService;
-    private ITagService tagService;
+    private final IUserService userService;
+    private final ITagService tagService;
+    private final INotificationService notificationService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PostController(IPostService postService, IPostLikeService postLikeService, IUserService userService, ITagService tagService, ModelMapper modelMapper) {
+    public PostController(IPostService postService, IPostLikeService postLikeService, IUserService userService, ITagService tagService, INotificationService notificationService, ModelMapper modelMapper) {
         this.postService = postService;
         this.postLikeService = postLikeService;
         this.userService = userService;
         this.tagService = tagService;
+        this.notificationService = notificationService;
         this.modelMapper = modelMapper;
     }
 
@@ -111,7 +105,7 @@ public class PostController {
             description = "Nhấn thích/bỏ thích một bài đăng")
     @GetMapping("/{postId}/like")
     public ResponseEntity<?> likePost(@PathVariable int postId) {
-        Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found for post"));
+        Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
 
         boolean isLiked = false;
@@ -126,13 +120,21 @@ public class PostController {
             like.setUser(user);
             like.setPost(post);
             postLikeService.save(like);
+
+            Notification notification = new Notification();
+            notification.setType("POST_LIKE");
+            notification.setReferredId(post.getPostId());
+            notification.setUserReceived(post.getUser());
+            notification.setUserTriggered(user);
+            notification = notificationService.save(notification);
+            notificationService.notifyUser(post.getUser().getEmail(), notification);
         }
 
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
                 .error(false)
-                .message(isLiked ? "Unlike" : "Like" + " post successfully")
+                .message((isLiked ? "Unlike" : "Like") + " post successfully")
                 .build());
     }
 

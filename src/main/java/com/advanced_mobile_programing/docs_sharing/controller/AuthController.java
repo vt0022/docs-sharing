@@ -23,7 +23,6 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -128,12 +127,16 @@ public class AuthController {
         var jwtToken = jwtService.generateToken(user.get(), authorities);
         var jwtRefreshToken = jwtService.generateRefreshToken(user.get());
 
+        // Get profile
+        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+
         AuthModel authResponse = AuthModel.builder()
                 .accessToken(jwtToken)
                 .refreshToken(jwtRefreshToken)
+                .user(userResponseModel)
                 .build();
 
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(ResponseModel.builder()
+        return ResponseEntity.ok().body(ResponseModel.builder()
                 .status(200)
                 .error(false)
                 .message("Login successfully")

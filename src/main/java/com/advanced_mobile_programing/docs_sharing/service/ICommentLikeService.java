@@ -8,4 +8,8 @@ import java.util.Optional;
 
 public interface ICommentLikeService {
     Optional<CommentLike> findByUserAndComment(User user, Comment comment);
+
+    void delete(CommentLike entity);
+
+    <S extends CommentLike> S save(S entity);
 }

@@ -23,4 +23,14 @@ public class CommentLikeServiceImpl implements ICommentLikeService {
     public Optional<CommentLike> findByUserAndComment(User user, Comment comment) {
         return commentLikeRepository.findByUserAndComment(user, comment);
     }
+
+    @Override
+    public void delete(CommentLike entity) {
+        commentLikeRepository.delete(entity);
+    }
+
+    @Override
+    public <S extends CommentLike> S save(S entity) {
+        return commentLikeRepository.save(entity);
+    }
 }

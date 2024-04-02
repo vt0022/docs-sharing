@@ -66,22 +66,20 @@ public class SecurityConfig {
                                 "/api/v1/auth/*").permitAll()
 
                         .requestMatchers(
+                                "/ws",
+                                "/notify/**",
+                                "/api-websocket").permitAll()
+
+                        .requestMatchers(
                                 "/api/v1/users/password/reset").permitAll()
 
                         .requestMatchers(
                                 "/api/v1/users/password/reset",
                                 "/api/v1/users/password",
-                                "/api/v1/users/profile",
                                 "/api/v1/users/avatar",
                                 "/api/v1/users/password/reset").hasAuthority("ROLE_STUDENT")
                         .requestMatchers(
                                 "/api/v1/users/*").hasAuthority("ROLE_ADMIN")
-
-                        .requestMatchers(
-                                "/api/v1/post/**").authenticated()
-
-                        .requestMatchers(
-                                "/api/v1/document/**").authenticated()
 
                         .anyRequest().authenticated())
 

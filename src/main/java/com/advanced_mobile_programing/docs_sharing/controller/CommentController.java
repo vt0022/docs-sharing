@@ -1,15 +1,10 @@
 package com.advanced_mobile_programing.docs_sharing.controller;
 
-import com.advanced_mobile_programing.docs_sharing.entity.Comment;
-import com.advanced_mobile_programing.docs_sharing.entity.Post;
-import com.advanced_mobile_programing.docs_sharing.entity.User;
+import com.advanced_mobile_programing.docs_sharing.entity.*;
 import com.advanced_mobile_programing.docs_sharing.model.request_model.CommentRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.CommentResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
-import com.advanced_mobile_programing.docs_sharing.service.ICommentLikeService;
-import com.advanced_mobile_programing.docs_sharing.service.ICommentService;
-import com.advanced_mobile_programing.docs_sharing.service.IPostService;
-import com.advanced_mobile_programing.docs_sharing.service.IUserService;
+import com.advanced_mobile_programing.docs_sharing.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +26,18 @@ public class CommentController {
     private final IUserService userService;
     private final IPostService postService;
     private final ICommentLikeService commentLikeService;
+    private final INotificationService notificationService;
 
     @Autowired
     public CommentController(ICommentService commentService, ModelMapper modelMapper,
                              IUserService userService, IPostService postService,
-                             ICommentLikeService commentLikeService) {
+                             ICommentLikeService commentLikeService, INotificationService notificationService) {
         this.commentService = commentService;
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.postService = postService;
         this.commentLikeService = commentLikeService;
+        this.notificationService = notificationService;
     }
 
     @Operation(summary = "Xem danh sách bình luận",
@@ -110,9 +107,9 @@ public class CommentController {
         Post post = postService.findById(commentRequest.getPostId()).orElseThrow(() -> new RuntimeException("Post not found"));
 
         Comment parentComment = null;
-        if (parentCommentId != null){
+        if (parentCommentId != null) {
             Optional<Comment> optionalParentComment = commentService.findById(parentCommentId);
-            if(optionalParentComment.isPresent()){
+            if (optionalParentComment.isPresent()) {
                 parentComment = optionalParentComment.get();
             }
         }
@@ -128,6 +125,15 @@ public class CommentController {
 
         commentService.save(comment);
         CommentResponseModel commentResponse = convertToCommentResponseModel(comment);
+
+        Notification notification = new Notification();
+        notification.setType("POST_COMMENT");
+        notification.setReferredId(post.getPostId());
+        notification.setUserReceived(post.getUser());
+        notification.setUserTriggered(user);
+        notification = notificationService.save(notification);
+        notificationService.notifyUser(post.getUser().getEmail(), notification);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseModel
                 .builder()
                 .status(200)
@@ -181,6 +187,43 @@ public class CommentController {
                 .error(false)
                 .message("Comment updated successfully")
                 .data(commentResponse)
+                .build());
+    }
+
+    @Operation(summary = "Thích bình luận",
+            description = "Nhấn thích/bỏ thích một bình luận")
+    @GetMapping("/{commentId}/like")
+    public ResponseEntity<?> likeComment(@PathVariable int commentId) {
+        Comment comment = commentService.findById(commentId).orElseThrow(() -> new RuntimeException("Comment not found"));
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+
+        boolean isLiked = false;
+
+        Optional<CommentLike> commentLike = commentLikeService.findByUserAndComment(user, comment);
+        if (commentLike.isPresent()) {
+            // Bỏ thích
+            commentLikeService.delete(commentLike.get());
+            isLiked = true;
+        } else {
+            CommentLike newCommentLike = new CommentLike();
+            newCommentLike.setUser(user);
+            newCommentLike.setComment(comment);
+            commentLikeService.save(newCommentLike);
+            
+            Notification notification = new Notification();
+            notification.setType("DOC_LIKE");
+            notification.setReferredId(comment.getPost().getPostId());
+            notification.setUserReceived(comment.getUser());
+            notification.setUserTriggered(user);
+            notification = notificationService.save(notification);
+            notificationService.notifyUser(comment.getUser().getEmail(), notification);
+        }
+
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message((isLiked ? "Unlike" : "Like") + " comment successfully")
                 .build());
     }
 
