@@ -190,13 +190,14 @@ public class DocumentController {
                                             @RequestPart("file") MultipartFile multipartFile) {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
 
-        FileModel gd = googleDriveUpload.uploadFile(multipartFile, documentRequestModel.getDocName(), null);
+        FileModel gd = googleDriveUpload.uploadFile(multipartFile, documentRequestModel.getDocName(), null, null);
         Category category = categoryService.findById(documentRequestModel.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
         Field field = fieldService.findById(documentRequestModel.getFieldId()).orElseThrow(() -> new RuntimeException("Field not found"));
 
         Document document = modelMapper.map(documentRequestModel, Document.class);
         document.setViewUrl(gd.getViewUrl());
         document.setDownloadUrl(gd.getDownloadUrl());
+        document.setThumbnail(gd.getThumbnail());
         document.setUser(user);
         document.setCategory(category);
         document.setField(field);
@@ -235,11 +236,13 @@ public class DocumentController {
         if (multipartFile != null) {
             // Get id of old file and thumbnail file
             String fileId = document.getViewUrl() != null ? getFileId(document.getViewUrl()) : null;
+            String thumbnailId = document.getThumbnail() != null ? getFileId(document.getThumbnail()) : null;
             // Upload file
-            FileModel gd = googleDriveUpload.uploadFile(multipartFile, documentRequestModel.getDocName(), fileId);
+            FileModel gd = googleDriveUpload.uploadFile(multipartFile, documentRequestModel.getDocName(), fileId, thumbnailId);
             // Update file properties for document without overwriting existing properties
             document.setViewUrl(gd.getViewUrl());
             document.setDownloadUrl(gd.getDownloadUrl());
+            document.setThumbnail(gd.getThumbnail());
         }
 
         // Cập nhật thông tin tài liệu

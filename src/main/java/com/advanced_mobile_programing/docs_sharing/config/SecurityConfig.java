@@ -79,6 +79,8 @@ public class SecurityConfig {
                                 "/api/v1/users/avatar",
                                 "/api/v1/users/password/reset").hasAuthority("ROLE_STUDENT")
                         .requestMatchers(
+                                "/api/v1/users/profile").authenticated()
+                        .requestMatchers(
                                 "/api/v1/users/*").hasAuthority("ROLE_ADMIN")
 
                         .anyRequest().authenticated())
