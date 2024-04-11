@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequestMapping("/api/v1/comment")
@@ -209,7 +211,7 @@ public class CommentController {
             newCommentLike.setUser(user);
             newCommentLike.setComment(comment);
             commentLikeService.save(newCommentLike);
-            
+
             Notification notification = new Notification();
             notification.setType("DOC_LIKE");
             notification.setReferredId(comment.getPost().getPostId());
@@ -230,20 +232,31 @@ public class CommentController {
     private CommentResponseModel convertToCommentResponseModel(Comment comment) {
         CommentResponseModel commentResponseModel = modelMapper.map(comment, CommentResponseModel.class);
 
-        int totalResponses = comment.getChildComments().size();
-        commentResponseModel.setTotalResponses(totalResponses);
-
+        // Tính toán tổng số lượt thích cho comment
         int totalLikes = comment.getCommentLikes().size();
         commentResponseModel.setTotalLikes(totalLikes);
 
+        // Tính toán tổng số bình luận con của comment (đệ quy)
+        int totalResponses = comment.getChildComments().size();
+        commentResponseModel.setTotalResponses(totalResponses);
+
+        // Kiểm tra xem người dùng hiện tại đã bình luận cho comment hay chưa
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
         boolean isCommented = comment.getUser().equals(user);
         commentResponseModel.setCommented(isCommented);
 
+        // Kiểm tra xem người dùng hiện tại đã thích comment hay không
         boolean isLiked = commentLikeService.findByUserAndComment(user, comment).isPresent();
         commentResponseModel.setLiked(isLiked);
 
+        // Map các comment con (đệ quy)
+        List<CommentResponseModel> childCommentResponseModels = new ArrayList<>();
+        for (Comment childComment : comment.getChildComments()) {
+            CommentResponseModel childCommentResponseModel = convertToCommentResponseModel(childComment);
+            childCommentResponseModels.add(childCommentResponseModel);
+        }
+        commentResponseModel.setChildComments(childCommentResponseModels);
+
         return commentResponseModel;
     }
-
 }

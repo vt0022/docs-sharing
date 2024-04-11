@@ -42,6 +42,6 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public Page<Comment> findAllByPost(Post post, Pageable pageable) {
-        return commentRepository.findAllByPost(post, pageable);
+        return commentRepository.findAllByPostAndParentCommentIsNullOrderByCreatedAtAsc(post, pageable);
     }
 }

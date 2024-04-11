@@ -1,7 +1,5 @@
 package com.advanced_mobile_programing.docs_sharing.model.lean_model;
 
-import com.advanced_mobile_programing.docs_sharing.model.response_model.CommentResponseModel;
-import com.advanced_mobile_programing.docs_sharing.model.response_model.PostResponseModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +20,10 @@ public class CommentLeanModel implements Serializable {
     private String content;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private List<CommentLeanModel> childComments;
     private UserLeanModel user;
+    private int totalLikes;
+    private int totalResponses;
+    private boolean isCommented;
+    private boolean isLiked;
 }

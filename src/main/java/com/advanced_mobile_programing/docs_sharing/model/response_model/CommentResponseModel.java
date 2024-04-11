@@ -1,6 +1,5 @@
 package com.advanced_mobile_programing.docs_sharing.model.response_model;
 
-import com.advanced_mobile_programing.docs_sharing.model.lean_model.CommentLeanModel;
 import com.advanced_mobile_programing.docs_sharing.model.lean_model.UserLeanModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentResponseModel  implements Serializable {
+public class CommentResponseModel implements Serializable {
     @Serial
     private final static long serialVersionUID = 1L;
 
@@ -22,12 +21,10 @@ public class CommentResponseModel  implements Serializable {
     private String content;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private List<CommentLeanModel> childComments;
-    private CommentLeanModel parentComment;
-    private PostResponseModel post;
-    private UserLeanModel user;
     private int totalLikes;
     private int totalResponses;
     private boolean isCommented;
     private boolean isLiked;
+    private UserLeanModel user;
+    private List<CommentResponseModel> childComments;
 }
