@@ -101,9 +101,48 @@ public class PostController {
                 .build());
     }
 
+    @Operation(summary = "Lấy danh sách bài đăng của người dùng hiện tại",
+            description = "Trả về danh sách danh sách bài đăng của người dùng hiện tại")
+    @GetMapping("/mine")
+    public ResponseEntity<?> getPostsOfCurrentUser(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "10") int size) {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> posts = postService.findByUserOrderByCreatedAtDesc(user, pageable);
+        Page<PostResponseModel> postResponseModels = posts.map(this::convertToPostModel);
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Get posts of current user successfully")
+                .data(postResponseModels)
+                .build());
+    }
+
+    @Operation(summary = "Lấy danh sách bài đăng của một người dùng ",
+            description = "Trả về danh sách danh sách bài đăng của một người dùng")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getPostsOfUser(@PathVariable int userId,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "10") int size) {
+        User user = userService.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> posts = postService.findByUserOrderByCreatedAtDesc(user, pageable);
+        Page<PostResponseModel> postResponseModels = posts.map(this::convertToPostModel);
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Get posts of user successfully")
+                .data(postResponseModels)
+                .build());
+    }
+
     @Operation(summary = "Thích bài đăng",
             description = "Nhấn thích/bỏ thích một bài đăng")
-    @GetMapping("/{postId}/like")
+    @PostMapping("/{postId}/like")
     public ResponseEntity<?> likePost(@PathVariable int postId) {
         Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));

@@ -1,6 +1,7 @@
 package com.advanced_mobile_programing.docs_sharing.service;
 
 import com.advanced_mobile_programing.docs_sharing.entity.Post;
+import com.advanced_mobile_programing.docs_sharing.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,4 +23,6 @@ public interface IPostService {
     long countAll();
 
     long countByCreatedAtYear(int year);
+
+    Page<Post> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 }

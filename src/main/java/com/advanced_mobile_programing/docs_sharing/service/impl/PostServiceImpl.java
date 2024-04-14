@@ -1,6 +1,7 @@
 package com.advanced_mobile_programing.docs_sharing.service.impl;
 
 import com.advanced_mobile_programing.docs_sharing.entity.Post;
+import com.advanced_mobile_programing.docs_sharing.entity.User;
 import com.advanced_mobile_programing.docs_sharing.repository.IPostRepository;
 import com.advanced_mobile_programing.docs_sharing.service.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public long countByCreatedAtYear(int year) {
         return postRepository.countByCreatedAtYear(year);
+    }
+
+    @Override
+    public Page<Post> findByUserOrderByCreatedAtDesc(User user, Pageable pageable) {
+        return postRepository.findByUserOrderByCreatedAtDesc(user, pageable);
     }
 }
