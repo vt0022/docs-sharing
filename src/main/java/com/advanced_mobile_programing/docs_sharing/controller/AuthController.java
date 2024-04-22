@@ -220,15 +220,6 @@ public class AuthController {
 
     }
 
-    @GetMapping("/testEmail")
-    public ResponseEntity<?> sendEmail() {
-        emailService.sendEmail("vanthuan2004@gmail.com",
-                "RESET PASSWORD",
-                125678,
-                "reset_password_email");
-        return ResponseEntity.ok("Send email successfully");
-    }
-
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@Valid @RequestBody Map<String, String> refreshToken) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY.getBytes());
@@ -245,14 +236,21 @@ public class AuthController {
 
         String accessToken = jwtService.generateToken(user, authorities);
 
-        Map<String, String> accessTokenResponse = new HashMap<>();
-        accessTokenResponse.put("accessToken", accessToken);
+        // Get profile
+        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+
+        AuthModel authResponse = AuthModel.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.get("refreshToken"))
+                .user(userResponseModel)
+                .build();
+
 
         ResponseModel refreshResponse = new ResponseModel().builder()
                 .status(200)
                 .error(false)
                 .message("Renew access token successfully")
-                .data(accessTokenResponse)
+                .data(authResponse)
                 .build();
         return ResponseEntity.ok(refreshResponse);
 
