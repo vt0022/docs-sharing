@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,17 +45,19 @@ public class DocumentServiceImpl implements IDocumentService {
         List<Category> categoryList = new ArrayList<>();
         List<Field> fieldList = new ArrayList<>();
 
-        for (Integer c : categories) {
-            Optional<Category> category = categoryService.findById(c);
-            if (category.isPresent())
-                categoryList.add(category.get());
-        }
+        if (categories != null)
+            for (Integer c : categories) {
+                Optional<Category> category = categoryService.findById(c);
+                if (category.isPresent())
+                    categoryList.add(category.get());
+            }
 
-        for (Integer f : fields) {
-            Optional<Field> field = fieldService.findById(f);
-            if (field.isPresent())
-                fieldList.add(field.get());
-        }
+        if (fields != null)
+            for (Integer f : fields) {
+                Optional<Field> field = fieldService.findById(f);
+                if (field.isPresent())
+                    fieldList.add(field.get());
+            }
 
         String query = '%' + q.toLowerCase() + '%';
 
@@ -76,7 +79,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Sort sort;
             Pageable newPageable;
             if (order.equals("mostViews"))
-                sort = Sort.by(Sort.Direction.DESC, "totalViews");
+                sort = Sort.by(Sort.Direction.DESC, "totalView");
             else if (order.equals("oldest"))
                 sort = Sort.by(Sort.Direction.ASC, "uploadedAt");
             else
@@ -112,7 +115,7 @@ public class DocumentServiceImpl implements IDocumentService {
             Sort sort;
             Pageable newPageable;
             if (order.equals("mostViews"))
-                sort = Sort.by(Sort.Direction.DESC, "totalViews");
+                sort = Sort.by(Sort.Direction.DESC, "totalView");
             else if (order.equals("oldest"))
                 sort = Sort.by(Sort.Direction.ASC, "uploadedAt");
             else
@@ -158,5 +161,14 @@ public class DocumentServiceImpl implements IDocumentService {
     @Override
     public long countByUploadedAtYear(int year) {
         return documentRepository.countByUploadedAtYear(year);
+    }
+
+    @Override
+    @Query("SELECT d FROM Document d " +
+            "JOIN d.documentLikes l " +
+            "WHERE l.user = :user " +
+            "ORDER BY l.likedAt DESC")
+    public Page<Document> findByUserLike(User user, Pageable pageable) {
+        return documentRepository.findByUserLike(user, pageable);
     }
 }

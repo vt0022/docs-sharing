@@ -14,65 +14,71 @@ import java.util.List;
 @Repository
 public interface IDocumentRepository extends JpaRepository<Document, Integer> {
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q)")
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%')))")
     Page<Document> findAll
             (String q, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND d.category IN :categories")
     Page<Document> findAllByCategories
             (String q, List<Category> categories, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND d.field IN :fields")
     Page<Document> findAllByFields
             (String q, List<Field> fields, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND d.category IN :categories " +
             "AND d.field IN :fields")
     Page<Document> findAllByCategoriesAndFields
             (String q, List<Category> categories, List<Field> fields, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "ORDER BY SIZE(d.documentLikes) DESC")
     Page<Document> findAllOrderByLikes(String q, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND d.category IN :categories " +
             "AND d.field IN :fields " +
             "ORDER BY SIZE(d.documentLikes) DESC")
     Page<Document> findAllByFieldsAndCategoriesOrderByLikes(String q, List<Category> categories, List<Field> fields, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND d.category IN :categories " +
             "ORDER BY SIZE(d.documentLikes) DESC")
     Page<Document> findAllByCategoriesOrderByLikes(String q, List<Category> categories, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND d.field IN :fields " +
             "ORDER BY SIZE(d.documentLikes) DESC")
     Page<Document> findAllByFieldsOrderByLikes(String q, List<Field> fields, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND :tag MEMBER OF d.tags")
     Page<Document> findAllByTags(String q, Tag tag, Pageable pageable);
 
     @Query("SELECT d FROM Document d " +
-            "WHERE (LOWER(d.docName) LIKE :q OR LOWER(d.docIntroduction) LIKE :q) " +
+            "WHERE (LOWER(d.docName) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(d.docIntroduction) LIKE LOWER(CONCAT('%', :q, '%'))) " +
             "AND :tag MEMBER OF d.tags " +
             "ORDER BY SIZE(d.documentLikes) DESC")
     Page<Document> findAllByTagsOrderByLikes(String q, Tag tag, Pageable pageable);
 
     Page<Document> findByUser(User user, Pageable pageable);
+
+    @Query("SELECT d FROM Document d " +
+            "JOIN d.documentLikes l " +
+            "WHERE l.user = :user " +
+            "ORDER BY l.likedAt DESC")
+    Page<Document> findByUserLike(User user, Pageable pageable);
 
     @Query("SELECT COUNT(d) FROM Document d WHERE d.uploadedAt >= :start AND d.uploadedAt < :end")
     long countByUploadedAtBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);

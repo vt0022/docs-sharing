@@ -1,10 +1,12 @@
 package com.advanced_mobile_programing.docs_sharing.controller;
 
 import com.advanced_mobile_programing.docs_sharing.entity.*;
+import com.advanced_mobile_programing.docs_sharing.model.FileModel;
 import com.advanced_mobile_programing.docs_sharing.model.request_model.PostRequestModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.PostResponseModel;
 import com.advanced_mobile_programing.docs_sharing.model.response_model.ResponseModel;
 import com.advanced_mobile_programing.docs_sharing.service.*;
+import com.advanced_mobile_programing.docs_sharing.util.GoogleDriveUpload;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RequestMapping("/api/v1/post")
 @RestController
@@ -26,15 +32,19 @@ public class PostController {
     private final IUserService userService;
     private final ITagService tagService;
     private final INotificationService notificationService;
+    private final IPostImageService postImageService;
+    private final GoogleDriveUpload googleDriveUpload;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PostController(IPostService postService, IPostLikeService postLikeService, IUserService userService, ITagService tagService, INotificationService notificationService, ModelMapper modelMapper) {
+    public PostController(IPostService postService, IPostLikeService postLikeService, IUserService userService, ITagService tagService, INotificationService notificationService, IPostImageService postImageService, GoogleDriveUpload googleDriveUpload, ModelMapper modelMapper) {
         this.postService = postService;
         this.postLikeService = postLikeService;
         this.userService = userService;
         this.tagService = tagService;
         this.notificationService = notificationService;
+        this.postImageService = postImageService;
+        this.googleDriveUpload = googleDriveUpload;
         this.modelMapper = modelMapper;
     }
 
@@ -196,21 +206,30 @@ public class PostController {
 
     @Operation(summary = "Đăng bài viết mới",
             description = "Tạo một bài viết mới")
-    @PostMapping("/create")
-    public ResponseEntity<?> createPost(@RequestBody PostRequestModel postRequestModel) {
+    @PostMapping(path = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createPost(@RequestPart PostRequestModel postRequestModel,
+                                        @RequestPart(required = false) List<MultipartFile> images) {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
-
-        Post post = new Post();
-        post.setTitle(postRequestModel.getTitle());
-        post.setContent(postRequestModel.getContent());
 
         // Lấy danh sách Tag dựa trên tagIds
         List<Tag> tags = tagService.findAllById(postRequestModel.getTagIds());
 
+        Post post = new Post();
+        post.setTitle(postRequestModel.getTitle());
+        post.setContent(postRequestModel.getContent());
         post.setTags(tags);
         post.setUser(user);
+        post = postService.save(post);
 
-        postService.save(post);
+        if (images != null) {
+            for (MultipartFile image : images) {
+                FileModel gd = googleDriveUpload.uploadImage(image, image.getOriginalFilename(), null, "post");
+                PostImage postImage = new PostImage();
+                postImage.setUrl(gd.getViewUrl());
+                postImage.setPost(post);
+                postImageService.save(postImage);
+            }
+        }
 
         PostResponseModel postResponseModels = convertToPostModel(post);
 
@@ -225,8 +244,10 @@ public class PostController {
 
     @Operation(summary = "Chỉnh sửa bài đăng",
             description = "Người dùng chỉ có quyền chỉnh sửa bài đăng của mình")
-    @PutMapping("/{postId}")
-    public ResponseEntity<?> updatePost(@PathVariable int postId, @RequestBody PostRequestModel postRequestModel) {
+    @PutMapping(path = "/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updatePost(@PathVariable int postId,
+                                        @RequestPart PostRequestModel postRequestModel,
+                                        @RequestParam(required = false) List<MultipartFile> images) {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
         Post post = postService.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 
@@ -235,14 +256,31 @@ public class PostController {
             throw new RuntimeException("You don't have permission to update this post");
         }
 
-        // Cập nhật thông tin bài đăng
-        post.setTitle(postRequestModel.getTitle());
-        post.setContent(postRequestModel.getContent());
         // Lấy danh sách Tag dựa trên tagIds
         List<Tag> tags = tagService.findAllById(postRequestModel.getTagIds());
 
+        // Cập nhật thông tin bài đăng
+        post.setTitle(postRequestModel.getTitle());
+        post.setContent(postRequestModel.getContent());
         post.setTags(tags);
-        postService.save(post);
+        post = postService.save(post);
+
+        List<PostImage> postImages = post.getPostImages();
+
+        for (PostImage postImage : postImages) {
+            googleDriveUpload.deleteFile(getFileId(postImage.getUrl()));
+            postImageService.deleteById(postImage.getPostImageId());
+        }
+
+        if (images != null) {
+            for (MultipartFile image : images) {
+                FileModel gd = googleDriveUpload.uploadImage(image, image.getOriginalFilename(), null, "post");
+                PostImage postImage = new PostImage();
+                postImage.setUrl(gd.getViewUrl());
+                postImage.setPost(post);
+                postImageService.save(postImage);
+            }
+        }
 
         PostResponseModel postResponseModels = convertToPostModel(post);
 
@@ -291,5 +329,19 @@ public class PostController {
         postResponseModel.setLiked(isLiked);
 
         return postResponseModel;
+    }
+
+    public String getFileId(String url) {
+        String regex = "=([^&]+)";
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(url);
+
+        if (matcher.find()) {
+            String fileId = matcher.group(1);
+            return fileId;
+        } else {
+            return null;
+        }
     }
 }

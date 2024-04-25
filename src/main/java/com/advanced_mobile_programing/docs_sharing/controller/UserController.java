@@ -22,9 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -104,7 +101,7 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile() {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not found"));
-        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+        UserResponseModel userResponseModel = convertToUserModel(user);
 
         return ResponseEntity.ok(ResponseModel.builder()
                 .status(200)
@@ -132,7 +129,7 @@ public class UserController {
 
         user = userService.update(user);
 
-        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+        UserResponseModel userResponseModel = convertToUserModel(user);
         return ResponseEntity.ok(ResponseModel.builder()
                 .status(200)
                 .error(false)
@@ -147,10 +144,10 @@ public class UserController {
         User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user.getImage() != null) {
-            FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), getFileId(user.getImage()));
+            FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), getFileId(user.getImage()), "avatar");
             user.setImage(gd.getViewUrl());
         } else {
-            FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), null);
+            FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), null, "avatar");
             user.setImage(gd.getViewUrl());
         }
 
@@ -186,14 +183,14 @@ public class UserController {
             throw new RuntimeException("Invalid password format");
         }
 
-        FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(newUser.getEmail()), null);
+        FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(newUser.getEmail()), null, "avatar");
         newUser.setImage(gd.getViewUrl());
 
         newUser.setAuthenticated(true);
 
         newUser = userService.save(newUser);
 
-        UserResponseModel userResponseModel = modelMapper.map(newUser, UserResponseModel.class);
+        UserResponseModel userResponseModel = convertToUserModel(newUser);
         return ResponseEntity.ok(ResponseModel.builder()
                 .status(200)
                 .error(false)
@@ -227,10 +224,10 @@ public class UserController {
 
         if (file != null) {
             if (user.getImage() != null) {
-                FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), getFileId(user.getImage()));
+                FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), getFileId(user.getImage()), "avatar");
                 user.setImage(gd.getViewUrl());
             } else {
-                FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), null);
+                FileModel gd = googleDriveUpload.uploadImage(file, getEmailUsername(user.getEmail()), null, "avatar");
                 user.setImage(gd.getViewUrl());
             }
         }
@@ -249,7 +246,7 @@ public class UserController {
             }
         }
 
-        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+        UserResponseModel userResponseModel = convertToUserModel(user);
         return ResponseEntity.ok(ResponseModel.builder()
                 .status(200)
                 .error(false)
@@ -282,7 +279,7 @@ public class UserController {
     }
 
     public String getFileId(String url) {
-        String regex = "/file/d/([^/]+)/";
+        String regex = "=([^&]+)";
         Pattern pattern = Pattern.compile(regex);
 
         Matcher matcher = pattern.matcher(url);
@@ -295,4 +292,21 @@ public class UserController {
         }
     }
 
+    public UserResponseModel convertToUserModel(User user) {
+        UserResponseModel userResponseModel = modelMapper.map(user, UserResponseModel.class);
+
+        int totalPosts = user.getPosts().size();
+        int totalDocuments = user.getDocuments().size();
+        int totalPostLikes = user.getPostLikes().size();
+        int totalDocumentLikes = user.getDocumentLikes().size();
+        int totalComments = user.getComments().size();
+
+        userResponseModel.setTotalPosts(totalPosts);
+        userResponseModel.setTotalDocuments(totalDocuments);
+        userResponseModel.setTotalPostLikes(totalPostLikes);
+        userResponseModel.setTotalDocumentLikes(totalDocumentLikes);
+        userResponseModel.setTotalComments(totalComments);
+
+        return userResponseModel;
+    }
 }

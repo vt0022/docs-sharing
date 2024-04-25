@@ -38,4 +38,13 @@ public class UserResponseModel implements Serializable {
 
     private RoleModel role;
 
+    private int totalPosts;
+
+    private int totalDocuments;
+
+    private int totalPostLikes;
+
+    private int totalDocumentLikes;
+
+    private int totalComments;
 }

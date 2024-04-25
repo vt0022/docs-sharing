@@ -29,4 +29,10 @@ public interface IPostRepository extends JpaRepository<Post, Integer> {
 
     @Query("SELECT COUNT(p) FROM Post p WHERE YEAR(p.createdAt) = :year")
     long countByCreatedAtYear(@Param("year") int year);
+
+    @Query("SELECT p FROM Post p " +
+            "JOIN p.postLikes l " +
+            "WHERE l.user = :user " +
+            "ORDER BY l.likedAt DESC")
+    Page<Post> findByUserLike(User user, Pageable pageable);
 }

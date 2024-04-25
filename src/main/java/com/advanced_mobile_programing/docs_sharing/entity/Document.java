@@ -69,10 +69,4 @@ public class Document {
         updatedAt = new Timestamp(System.currentTimeMillis());
         totalView = 0;
     }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Timestamp(System.currentTimeMillis());
-    }
-
 }

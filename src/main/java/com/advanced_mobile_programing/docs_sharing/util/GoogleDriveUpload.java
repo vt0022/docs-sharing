@@ -77,10 +77,10 @@ public class GoogleDriveUpload {
         }
     }
 
-    public FileModel uploadImage(MultipartFile multipartFile, String fileName, String fileId) {
+    public FileModel uploadImage(MultipartFile multipartFile, String fileName, String fileId, String type) {
         try {
             // Set parent folder
-            String folderId = "1mBcfLCCQP9QK9S1h73OGYziYK_vp_6au";
+            String folderId = type.equals("post") ? "1XnybAsjEda_D0ohYUeHgajgecIU2nDl0" : "1mBcfLCCQP9QK9S1h73OGYziYK_vp_6au";
 
             List<String> parents = Collections.singletonList(folderId);
 
@@ -160,5 +160,4 @@ public class GoogleDriveUpload {
             return null;
         }
     }
-
 }

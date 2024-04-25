@@ -18,10 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/v1/document")
 @RestController
@@ -64,6 +66,27 @@ public class DocumentController {
                 .status(200)
                 .error(false)
                 .message("Get documents by current user successfully")
+                .data(documentResponseModels)
+                .build());
+    }
+
+    @Operation(summary = "Lấy tất cả tài liệu đã thích của người dùng hiện tại",
+            description = "Trả về danh sách tất cả tài liệu đã thích của người dùng hiện tại")
+    @GetMapping("/user/likes")
+    public ResponseEntity<?> getLikedDocument(@RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "10") int size) {
+        User user = userService.findLoggedInUser().orElseThrow(() -> new RuntimeException("User not logged in"));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Document> documents = documentService.findByUserLike(user, pageable);
+
+        Page<DocumentResponseModel> documentResponseModels = documents.map(this::convertToDocumentModel);
+
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Get documents that current user liked successfully")
                 .data(documentResponseModels)
                 .build());
     }
@@ -123,6 +146,24 @@ public class DocumentController {
 
         Page<Document> documents = documentService.searchAll(q, categories, fields, order, pageable);
         Page<DocumentResponseModel> documentResponseModels = documents.map(this::convertToDocumentModel);
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Search all document successfully")
+                .data(documentResponseModels)
+                .build());
+    }
+
+    @Operation(summary = "Lấy top 10 tài liệu xem nhiều",
+            description = "Trả về danh sách top 10 tài liệu xem nhiều")
+    @GetMapping("/top10")
+    public ResponseEntity<?> getTop10Documents() {
+        // Order can be newest, mostLikes, mostViews
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Document> documents = documentService.searchAll("", null, null, "mostViews", pageable);
+        List<DocumentResponseModel> documentResponseModels = documents.stream().map(this::convertToDocumentModel).collect(Collectors.toList());
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
@@ -196,11 +237,17 @@ public class DocumentController {
     @GetMapping("/{docId}")
     public ResponseEntity<?> getDocument(@PathVariable int docId) {
         Document document = documentService.findById(docId).orElseThrow(() -> new RuntimeException("Document not found"));
+
         DocumentResponseModel documentResponseModel = convertToDocumentModel(document);
+
+        document.setTotalView(document.getTotalView() + 1);
+        documentService.save(document);
+
         return ResponseEntity.ok(ResponseModel
                 .builder()
                 .status(200)
                 .error(false)
+                .message("Get document successfully")
                 .data(documentResponseModel)
                 .build());
     }
@@ -272,6 +319,7 @@ public class DocumentController {
         document.setDocIntroduction(documentRequestModel.getDocIntroduction());
         document.setCategory(category);
         document.setField(field);
+        document.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         documentService.save(document);
 
         DocumentResponseModel documentResponseModel = convertToDocumentModel(document);

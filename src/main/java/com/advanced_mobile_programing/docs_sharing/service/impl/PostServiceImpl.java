@@ -7,6 +7,7 @@ import com.advanced_mobile_programing.docs_sharing.service.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,8 +41,8 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public void save(Post post) {
-        postRepository.save(post);
+    public <S extends Post> S save(S entity) {
+        return postRepository.save(entity);
     }
 
     @Override
@@ -69,5 +70,14 @@ public class PostServiceImpl implements IPostService {
     @Override
     public Page<Post> findByUserOrderByCreatedAtDesc(User user, Pageable pageable) {
         return postRepository.findByUserOrderByCreatedAtDesc(user, pageable);
+    }
+
+    @Override
+    @Query("SELECT p FROM Post p " +
+            "JOIN p.postLikes l " +
+            "WHERE l.user = :user " +
+            "ORDER BY l.likedAt DESC")
+    public Page<Post> findByUserLike(User user, Pageable pageable) {
+        return postRepository.findByUserLike(user, pageable);
     }
 }

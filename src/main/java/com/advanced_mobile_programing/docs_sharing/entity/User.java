@@ -64,7 +64,7 @@ public class User implements Serializable, UserDetails {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> documents = new ArrayList<>();
+    private List<Document> documents = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private VerificationCode verificationCode;

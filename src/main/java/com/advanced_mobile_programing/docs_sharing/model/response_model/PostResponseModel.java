@@ -37,4 +37,6 @@ public class PostResponseModel implements Serializable {
     private boolean isLiked;
 
     private UserLeanModel user;
+
+    private List<PostImageResponseModel> postImages;
 }
