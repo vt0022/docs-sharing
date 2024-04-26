@@ -84,6 +84,12 @@ public class User implements Serializable, UserDetails {
     @OneToMany(mappedBy = "userTriggered", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> triggerredNotifications = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DocumentReport> documentReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostReport> postReports = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

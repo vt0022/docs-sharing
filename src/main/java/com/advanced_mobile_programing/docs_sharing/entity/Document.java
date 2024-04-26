@@ -63,6 +63,9 @@ public class Document {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags = new ArrayList<>();
 
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DocumentReport> documentReports = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         uploadedAt = new Timestamp(System.currentTimeMillis());

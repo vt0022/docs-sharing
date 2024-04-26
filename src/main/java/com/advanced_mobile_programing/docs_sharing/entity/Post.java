@@ -47,6 +47,9 @@ public class Post {
     @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<PostImage> postImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostReport> postReports = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Timestamp(System.currentTimeMillis());

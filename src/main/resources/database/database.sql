@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
 --
 -- Host: localhost    Database: docs_sharing
 -- ------------------------------------------------------
--- Server version	8.0.31
+-- Server version	8.0.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -54,7 +54,7 @@ CREATE TABLE `comment` (
   `post_id` int DEFAULT NULL,
   `commented_by` int DEFAULT NULL,
   `parent_comment_id` int DEFAULT NULL,
-  `content` text NOT NULL,
+  `content` varchar(255) NOT NULL,
   `created_at` datetime(6) DEFAULT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`comment_id`),
@@ -64,7 +64,7 @@ CREATE TABLE `comment` (
   CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`commented_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`parent_comment_id`) REFERENCES `comment` (`comment_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +73,7 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (1,1,10,NULL,'Cho mình xin với','2023-12-13 23:58:24.356000',NULL),(2,1,6,1,'Bạn comment email cho mình nha bạn!','2023-12-14 00:57:24.356000','2024-03-18 14:21:29.818000'),(3,1,12,NULL,'Còn không bạn ơi!','2023-12-14 05:57:24.356000',NULL),(4,1,6,3,'Mình hỏi bạn mình thì bạn mình cũng có một cuốn, bạn cho mình xin email nha','2023-12-14 08:57:24.356000',NULL),(5,1,10,2,'thikieu1703@gmail.com, cảm ơn bạn nhiều','2023-12-14 09:57:24.356000',NULL),(6,1,12,4,'ngocphuc0808@gmail.com, cảm ơn bạn','2023-12-14 09:59:24.356000',NULL),(7,2,13,NULL,'Cho mình ké với ạ!','2023-12-14 23:58:25.183000',NULL),(8,2,15,NULL,'Cho mình ké nữa ạ!','2023-12-15 00:57:25.183000',NULL),(9,2,18,NULL,'Có ai có không ạ?','2023-12-15 05:57:25.183000',NULL),(10,2,6,NULL,'Nhiều người cùng câu hỏi quá','2023-12-15 08:57:25.183000',NULL),(11,3,15,NULL,'Mình bạn ơi!','2023-12-15 23:58:25.183000',NULL),(12,3,6,11,'Gửi email mình nha ','2023-12-16 00:57:25.183000',NULL),(14,4,38,NULL,'Mình thấy tham khảo link này khá ổn: https://www.studocu.com/vn/document/dai-hoc-su-pham-ha-noi/triet-hoc-mac-lenin/lien-he-cac-van-de-trong-triet-hoc-vao-cuoc-song-thuc-tien/21204099','2024-01-16 00:57:25.183000','2024-01-16 00:57:25.183000'),(15,4,38,NULL,'Hoặc link này: https://www.tapchicongsan.org.vn/web/guest/nghien-cu/-/2018/821819/view_content','2024-01-16 01:57:25.183000','2024-01-16 01:57:25.183000'),(16,4,7,14,'Cảm ơn bạn nhiều!','2024-01-16 02:57:25.183000','2024-01-16 02:57:25.183000'),(17,4,7,15,'Cảm ơn bạn nha!','2024-01-16 02:59:25.183000','2024-01-16 02:59:25.183000'),(18,4,38,16,'Ok bạn','2024-01-16 03:15:25.183000','2024-01-16 03:15:25.183000'),(19,4,38,17,'Ok bạn','2024-01-16 03:16:25.183000','2024-01-16 03:16:25.183000'),(36,5,39,NULL,'Bạn xem thử link này: https://link.springer.com/article/10.1007/s00253-021-11330-x','2023-12-18 01:01:25.183000','2023-12-18 01:01:25.183000'),(37,5,40,NULL,'Bạn xem này thử: https://www.researchgate.net/publication/351608271_Bacillus_subtilis_High_Cell_Density_Fermentation_Using_a_Sporulation-Deficient_Strain_for_the_Production_of_Surfactin','2023-12-18 02:01:25.183000','2023-12-18 02:01:25.183000'),(38,5,41,NULL,'Cái này cũng hay: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3187127/','2023-12-18 03:01:25.183000','2023-12-18 03:01:25.183000'),(39,5,7,36,'Cảm ơn bạn nha','2023-12-18 04:01:25.183000','2023-12-18 04:01:25.183000'),(40,5,7,37,'Cảm ơn bạn nha','2023-12-18 05:01:25.183000','2023-12-18 05:01:25.183000'),(41,5,7,38,'Cảm ơn bạn nha','2023-12-18 06:01:25.183000','2023-12-18 06:01:25.183000'),(46,6,42,NULL,'Đây nha bạn: https://www.studocu.com/vn/document/dai-hoc-ton-duc-thang/tu-tuong-ho-chi-minh/giao-trinh-tthcm-2021/35419403','2023-12-18 12:57:25.183000','2023-12-18 12:57:25.183000'),(47,6,43,NULL,'Cái này cho tải miễn phí nè bạn: https://www.academia.edu/11322568/B%E1%BB%99_gi%C3%A1o_d%E1%BB%A5c_v%C3%A0_%C4%91%C3%A0o_t%E1%BA%A1o_Gi%C3%A1o_tr%C3%ACnh_T%C6%B0_t%C6%B0%E1%BB%9Fng_H%E1%BB%93_Ch%C3%AD_Minh','2023-12-18 13:57:25.183000','2023-12-18 13:57:25.183000'),(48,6,44,NULL,'Hồi kia mình học bản 2019, bản mới nhất hình như chưa xuất bản chính thức hay sao á bạn','2023-12-18 14:57:25.183000','2023-12-18 14:57:25.183000'),(49,6,7,46,'Cảm ơn bạn','2023-12-19 14:57:25.183000','2023-12-19 14:57:25.183000'),(50,6,7,47,'Cảm ơn bạn','2023-12-20 14:57:25.183000','2023-12-20 14:57:25.183000'),(51,6,7,48,'Hình như là vậy á bạn','2023-12-18 15:57:25.183000','2023-12-18 15:57:25.183000'),(52,7,23,NULL,'Tuyệt vời quá! Mình rất thích đọc sách Triết học. Bạn có thể chia sẻ tên một vài cuốn sách hay được không?','2023-12-18 13:57:25.183000','2023-12-18 13:57:25.183000'),(53,7,19,NULL,'Ôi, sách Triết học hả? Mình tò mò quá đi thôi! Để mình vào trang cá nhân bạn xem ngay đây.','2023-12-18 14:57:25.183000','2023-12-18 14:57:25.183000'),(54,7,21,NULL,'Cảm ơn bạn đã chia sẻ! Mình luôn muốn tìm đọc thêm sách Triết học để mở rộng tư duy.','2023-12-18 15:57:25.183000','2023-12-18 15:57:25.183000'),(55,7,18,NULL,'Thể loại Triết học nào bạn thích nhất? Mình cũng đang tìm hiểu về lĩnh vực này.','2023-12-18 16:58:25.183000','2023-12-18 16:58:25.183000'),(56,7,21,52,'Chắc chắn rồi! Mình có mấy cuốn tâm đắc như: Suy ngẫm về cuộc sống của Marcus Aurelius, Đạo đức của Aristotle, Thiên nhiên con người của Jean-Jacques Rousseau,... Bạn có thể tham khảo thêm nhé!','2023-12-18 16:59:25.183000','2023-12-18 16:59:25.183000'),(57,7,21,53,'Chào bạn! Rất vui được chào đón bạn đến với trang cá nhân của mình. Hy vọng bạn sẽ tìm được những cuốn sách ưng ý!','2023-12-18 17:57:25.183000','2023-12-18 17:57:25.183000'),(58,7,21,54,'Mình cũng vậy! Đọc sách Triết học giúp mình suy nghĩ thấu đáo và có cái nhìn đa chiều hơn về cuộc sống. Chúc bạn tìm được những cuốn sách hay và bổ ích!','2023-12-18 18:57:25.183000','2023-12-18 18:57:25.183000'),(59,7,21,55,'Mình thích Triết học Hi Lạp cổ đại và Triết học hiện đại. Bạn thì sao? Mình cũng đang tìm hiểu về Triết học phương Đông nữa.','2023-12-18 19:57:25.183000','2023-12-18 19:57:25.183000'),(60,8,23,NULL,'Không thấy bạn ơi!','2023-12-18 14:57:25.183000','2023-12-18 14:57:25.183000'),(61,8,9,60,'Xin lỗi bạn để mình đăng lại','2023-12-18 15:57:25.183000','2023-12-18 15:57:25.183000'),(62,8,23,61,'Ok bạn','2023-12-18 16:57:25.183000','2023-12-18 16:57:25.183000'),(63,9,32,NULL,'Bạn học AI được bao lâu rồi? Bạn có thể chia sẻ kinh nghiệm học tập của bạn với mình được không?','2023-12-18 15:57:25.183000','2023-12-18 15:57:25.183000'),(64,9,33,NULL,'Cảm ơn bạn đã chia sẻ tài liệu học AI. Mình rất mong muốn được học hỏi thêm về lĩnh vực này.','2023-12-18 16:57:25.183000','2023-12-18 16:57:25.183000'),(65,9,35,NULL,'Chúc bạn học tập tốt và gặt hái được nhiều thành công trong lĩnh vực AI!','2023-12-18 17:57:25.183000','2023-12-18 17:57:25.183000'),(66,9,9,63,'Mình đã học AI được khoảng 2 năm rồi. Ban đầu mình học qua các khóa học online, sau đó tham gia một số dự án thực tế để trau dồi kiến thức. Mình cũng tham gia một số cộng đồng học AI online để trao đổi và học hỏi kinh nghiệm từ những người đi trước.','2023-12-18 18:57:25.183000','2023-12-18 18:57:25.183000'),(67,9,9,64,'Rất vui khi bạn quan tâm đến lĩnh vực AI. Mình hy vọng những tài liệu mà mình chia sẻ sẽ giúp ích cho bạn trong quá trình học tập.','2023-12-18 19:57:25.183000','2023-12-18 19:57:25.183000'),(68,9,9,65,'Cảm ơn lời chúc của bạn! Mình cũng chúc bạn học tập tốt và đạt được nhiều thành công trong lĩnh vực mà bạn đam mê.','2023-12-18 20:57:25.183000','2023-12-18 20:57:25.183000'),(69,10,41,NULL,'Tuyệt vời! Mình đang rất cần tài liệu bản dịch hướng dẫn sử dụng Intellij. Bạn có thể chia sẻ link tải tài liệu được không?','2023-12-18 17:30:25.183000','2023-12-18 17:30:25.183000'),(70,10,42,NULL,'Cảm ơn bạn đã chia sẻ tài liệu bản dịch hướng dẫn sử dụng Intellij. Mình rất mong muốn được tham khảo tài liệu này.','2023-12-18 17:32:25.183000','2023-12-18 17:32:25.183000'),(71,10,43,NULL,'Bạn có thể cho mình biết thêm về nội dung của tài liệu bản dịch hướng dẫn sử dụng Intellij được không?','2023-12-18 17:34:25.183000','2023-12-18 17:34:25.183000'),(72,10,47,NULL,'Mình cũng đang sử dụng Intellij để lập trình. Bạn có thể chia sẻ một vài mẹo hay sử dụng Intellij được không?','2023-12-18 17:36:25.183000','2023-12-18 17:36:25.183000'),(73,10,38,NULL,'Cùng nhau học hỏi và chia sẻ kiến thức về Intellij sẽ giúp chúng ta sử dụng công cụ này hiệu quả hơn.','2023-12-18 17:37:25.183000','2023-12-18 17:37:25.183000'),(74,10,39,NULL,'Tài liệu bản dịch hướng dẫn sử dụng Intellij này dành cho phiên bản Intellij nào?','2023-12-18 17:38:25.183000','2023-12-18 17:38:25.183000'),(75,11,23,NULL,'Thơ Xuân Diệu luôn mang đến cho mình những cảm xúc mãnh liệt và những suy tư sâu lắng về cuộc sống và tình yêu.','2023-12-18 18:30:25.183000','2023-12-18 18:30:25.183000'),(76,11,28,NULL,'Mình đặc biệt thích những bài thơ về tình yêu của Xuân Diệu. Ông đã thể hiện tình yêu một cách nồng nàn, say đắm và đầy sức sống.','2023-12-18 18:31:25.183000','2023-12-18 18:31:25.183000'),(77,11,29,NULL,'Theo bạn, đâu là bài thơ hay nhất của Xuân Diệu? Mình rất muốn được nghe chia sẻ của bạn.','2023-12-18 18:32:25.183000','2023-12-18 18:32:25.183000'),(78,11,30,NULL,'Cùng nhau đọc thơ và chia sẻ cảm nhận sẽ giúp chúng ta hiểu sâu sắc hơn về thơ Xuân Diệu và thơ ca Việt Nam nói chung.','2023-12-18 18:33:25.183000','2023-12-18 18:33:25.183000'),(79,11,34,NULL,'Bạn có thể giới thiệu cho mình một vài tác phẩm tiêu biểu của Xuân Diệu được không?','2023-12-18 18:34:25.183000','2023-12-18 18:34:25.183000'),(80,11,35,NULL,'Phong cách thơ của Xuân Diệu có gì đặc biệt? Theo bạn, điều gì tạo nên sức hấp dẫn của thơ Xuân Diệu?','2023-12-18 18:35:25.183000','2023-12-18 18:35:25.183000'),(82,11,6,75,'Đúng vậy! Thơ Xuân Diệu luôn có sức lay động lòng người bởi những cảm xúc chân thực và những suy tư sâu sắc về kiếp người, về tình yêu và cuộc sống. Mình đặc biệt ấn tượng với những bài thơ như \"Vội vàng\", \"Đây mùa thu tới\", \"Thơ tình cuối mùa thu\"... Những bài thơ này đã thể hiện một cách rõ nét phong cách thơ Xuân Diệu: nồng nàn, say đắm, đầy sức sống và luôn hướng đến khát vọng sống mãnh liệt.','2023-12-18 18:30:25.183000','2023-12-18 18:30:25.183000'),(83,11,6,76,'Mình cũng vậy! Thơ tình của Xuân Diệu luôn khiến mình cảm thấy bồi hồi và xúc động. Những bài thơ như \"Yêu\", \"Giục giã\", \"Lời kêu gọi\"... đã thể hiện một cách xuất sắc những cung bậc cảm xúc khác nhau của tình yêu: từ những rung động ban đầu, đến những đắm say nồng nàn, rồi đến cả những hờn trách và nuối tiếc. Xuân Diệu đã thổi hồn vào thơ tình một sức sống mãnh liệt, khiến cho những vần thơ của ông trở nên bất hủ.','2023-12-18 18:31:25.183000','2023-12-18 18:31:25.183000'),(84,11,6,77,'Khó có thể khẳng định đâu là bài thơ hay nhất của Xuân Diệu vì mỗi bài thơ đều mang một vẻ đẹp và ý nghĩa riêng. Tuy nhiên, theo ý kiến cá nhân của mình, \"Vội vàng\" là một trong những bài thơ tiêu biểu và xuất sắc nhất của ông. Bài thơ đã thể hiện một cách rõ nét quan niệm sống của Xuân Diệu: ham sống, yêu đời, trân trọng từng khoảnh khắc của cuộc sống. Bên cạnh đó, \"Đây mùa thu tới\", \"Thơ tình cuối mùa thu\" cũng là những bài thơ rất hay và đáng đọc.','2023-12-18 18:32:25.183000','2023-12-18 18:32:25.183000'),(85,11,6,78,'Mình hoàn toàn đồng ý với bạn! Việc cùng nhau đọc thơ, chia sẻ cảm nhận và trao đổi ý kiến sẽ giúp chúng ta hiểu sâu sắc hơn về từng bài thơ, về phong cách thơ của tác giả và về thơ ca Việt Nam nói chung. Mình rất vui khi được cùng bạn và các bạn yêu thích thơ Xuân Diệu tham gia vào những buổi giao lưu và thảo luận về thơ ca.','2023-12-18 18:35:25.183000','2023-12-18 18:35:25.183000'),(86,11,6,79,'Chắc chắn rồi! Một số tác phẩm tiêu biểu của Xuân Diệu mà bạn nên đọc bao gồm: Thơ: Thơ thơ (1938), Gửi hương cho gió (1945), Dưới sao đêm (1962), Vời trăng và mây (1968)...; Văn xuôi: Thuyền và trăng (1938), Giáo dục thơ ca (1945), Lời quê (1956)...','2023-12-18 18:40:25.183000','2023-12-18 18:40:25.183000'),(87,11,6,80,'Phong cách thơ của Xuân Diệu có thể tóm tắt qua những nét chính sau: Nồng nàn, say đắm: Thơ Xuân Diệu luôn thể hiện những cảm xúc mãnh liệt, nồng nàn, say đắm về cuộc sống, về tình yêu. Đầy sức sống: Thơ Xuân Diệu luôn hướng đến khát vọng sống mãnh liệt, yêu đời, trân trọng từng khoảnh khắc của cuộc sống. Hiện đại: Thơ Xuân Diệu sử dụng nhiều hình ảnh hiện đại, ngôn ngữ giản dị, dễ hiểu','2023-12-18 18:50:25.183000','2023-12-18 18:50:25.183000'),(88,17,34,NULL,'https://tracnghiem.net/cntt/510-cau-trac-nghiem-nguyen-li-he-dieu-hanh-561.html','2024-04-01 08:20:24.356000','2024-04-01 08:20:24.356000'),(89,17,35,NULL,'Đây bạn ơi: https://khoahoc.vietjack.com/thi-online/500-cau-trac-nghiem-nguyen-li-he-dieu-hanh-co-dap-an/93719','2024-04-01 08:21:24.356000','2024-04-01 08:21:24.356000'),(90,17,9,NULL,'https://tracnghiem.net/cntt/320-cau-hoi-trac-nghiem-he-dieu-hanh-windows-co-dap-an-113.html','2024-04-01 08:23:24.356000','2024-04-01 08:23:24.356000'),(91,17,41,NULL,'Bạn có thể tham khảo trang tiếng Anh này: https://www.codioo.com/computer-science-quiz/operating-system-quiz','2024-04-01 08:30:24.356000','2024-04-01 08:30:24.356000'),(92,17,19,88,'Cảm ơn bạn! ','2024-04-01 08:40:24.356000','2024-04-01 08:40:24.356000'),(93,17,19,89,'Cảm ơn bạn! ','2024-04-01 08:41:24.356000','2024-04-01 08:41:24.356000'),(94,17,19,90,'Cảm ơn bạn! ','2024-04-01 08:42:24.356000','2024-04-01 08:42:24.356000'),(95,17,19,91,'Cảm ơn bạn!','2024-04-01 08:43:24.356000','2024-04-01 08:43:24.356000'),(96,12,12,NULL,'Đây nha bạn: https://readvii.com/sach-hay-ve-an-toan-thong-tin/#:~:text=9%20quy%E1%BB%83n%20s%C3%A1ch%20hay%20v%E1%BB%81%20an%20to%C3%A0n%20th%C3%B4ng,Ngh%E1%BB%87%20Thu%E1%BA%ADt%20%E1%BA%A8n%20M%C3%ACnh%20...%20C%C3%A1c%20m%E1%BB%A5c%20kh%C3%A1c','2023-12-18 19:30:25.183000','2023-12-18 19:30:25.183000'),(97,12,13,NULL,'Đây nha bạn: https://www.studocu.com/vn/document/truong-dai-hoc-thuong-mai/giao-trinh-qtbh/giao-trinh-an-toan-va-bao-mat-thong-tin-phan-1-pgsts-dam-gia-manh-ts-nguyen-thi-hoi-chu-bien-1505516/70912902','2023-12-18 19:35:25.183000','2023-12-18 19:35:25.183000'),(98,12,15,NULL,'Vài sách mở rộng khá hay: https://thuviengreenlibrary.org/sach-ve-an-ninh-mang-2/','2023-12-18 19:40:25.183000','2023-12-18 19:40:25.183000'),(99,12,18,NULL,'Đây nha bạn: https://users.soict.hust.edu.vn/tungbt/it4015/','2023-12-18 19:45:25.183000','2023-12-18 19:45:25.183000'),(100,12,6,96,'Cảm ơn bạn','2023-12-18 19:50:25.183000','2023-12-18 19:50:25.183000'),(101,12,6,97,'Cảm ơn bạn','2023-12-18 19:51:25.183000','2023-12-18 19:51:25.183000'),(102,12,6,98,'Cảm ơn bạn','2023-12-18 19:52:25.183000','2023-12-18 19:52:25.183000'),(103,12,6,99,'Cảm ơn bạn','2023-12-18 19:53:25.183000','2023-12-18 19:53:25.183000');
+INSERT INTO `comment` VALUES (1,1,10,NULL,'Cho mình xin với','2023-12-13 23:58:24.356000',NULL),(2,1,6,1,'Bạn comment email cho mình nha bạn!','2023-12-14 00:57:24.356000','2024-03-18 14:21:29.818000'),(3,1,12,NULL,'Còn không bạn ơi!','2023-12-14 05:57:24.356000',NULL),(4,1,6,3,'Mình hỏi bạn mình thì bạn mình cũng có một cuốn, bạn cho mình xin email nha','2023-12-14 08:57:24.356000',NULL),(5,1,10,2,'thikieu1703@gmail.com, cảm ơn bạn nhiều','2023-12-14 09:57:24.356000',NULL),(6,1,12,4,'ngocphuc0808@gmail.com, cảm ơn bạn','2023-12-14 09:59:24.356000',NULL),(7,2,13,NULL,'Cho mình ké với ạ!','2023-12-14 23:58:25.183000',NULL),(8,2,15,NULL,'Cho mình ké nữa ạ!','2023-12-15 00:57:25.183000',NULL),(9,2,18,NULL,'Có ai có không ạ?','2023-12-15 05:57:25.183000',NULL),(10,2,6,NULL,'Nhiều người cùng câu hỏi quá','2023-12-15 08:57:25.183000',NULL),(11,3,15,NULL,'Mình bạn ơi!','2023-12-15 23:58:25.183000',NULL),(12,3,6,11,'Gửi email mình nha ','2023-12-16 00:57:25.183000',NULL),(14,1,21,6,'Không có gì nha bạn','2024-04-11 13:16:21.539000','2024-04-11 13:16:21.539000'),(15,1,21,4,'Ké, cảm ơn bạn','2024-04-11 13:27:02.769000','2024-04-11 13:27:02.769000');
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,6 +175,41 @@ INSERT INTO `document_like` VALUES (1,6,_binary '','2023-12-14 08:57:24.356000'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `document_report`
+--
+
+DROP TABLE IF EXISTS `document_report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `document_report` (
+  `report_id` int NOT NULL AUTO_INCREMENT,
+  `reason` varchar(255) DEFAULT NULL,
+  `doc_id` int DEFAULT NULL,
+  `reported_at` datetime(6) DEFAULT NULL,
+  `is_read` bit(1) NOT NULL,
+  `type_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `FK1baca7vgifb67o0bjisnxcorm` (`doc_id`),
+  KEY `FKgqwg45b36yuohklfx1ajbvsu7` (`type_id`),
+  KEY `FK7h284866ps22uuvg846fqf1oc` (`user_id`),
+  CONSTRAINT `FK1baca7vgifb67o0bjisnxcorm` FOREIGN KEY (`doc_id`) REFERENCES `document` (`doc_id`),
+  CONSTRAINT `FK7h284866ps22uuvg846fqf1oc` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `FKgqwg45b36yuohklfx1ajbvsu7` FOREIGN KEY (`type_id`) REFERENCES `report_type` (`type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `document_report`
+--
+
+LOCK TABLES `document_report` WRITE;
+/*!40000 ALTER TABLE `document_report` DISABLE KEYS */;
+INSERT INTO `document_report` VALUES (1,'Spam 2 tài liệu y hệt nhau',37,'2024-04-26 23:20:37.473000',_binary '\0',4,21);
+/*!40000 ALTER TABLE `document_report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `field`
 --
 
@@ -220,7 +255,7 @@ CREATE TABLE `notification` (
   KEY `FK26hcgm32f8ash543133vqtah6` (`user_triggered_id`),
   CONSTRAINT `FK26hcgm32f8ash543133vqtah6` FOREIGN KEY (`user_triggered_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `FK8hqcsrdk18hh77oos0cii496w` FOREIGN KEY (`user_received_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -229,7 +264,7 @@ CREATE TABLE `notification` (
 
 LOCK TABLES `notification` WRITE;
 /*!40000 ALTER TABLE `notification` DISABLE KEYS */;
-INSERT INTO `notification` VALUES (1,_binary '\0',1,'POST_LIKE',6,21),(2,_binary '\0',7,'POST_LIKE',21,5),(3,_binary '\0',5,'COMMENT_LIKE',10,21),(5,_binary '\0',1,'POST_LIKE',6,10),(13,_binary '\0',1,'DOC_LIKE',10,21),(14,_binary '\0',1,'DOC_LIKE',10,21);
+INSERT INTO `notification` VALUES (1,_binary '\0',1,'POST_LIKE',6,21),(2,_binary '\0',7,'POST_LIKE',21,5),(3,_binary '\0',5,'COMMENT_LIKE',10,21),(5,_binary '\0',1,'POST_LIKE',6,10),(13,_binary '\0',1,'DOC_LIKE',10,21),(14,_binary '\0',1,'DOC_LIKE',10,21),(15,_binary '\0',1,'POST_COMMENT',6,21),(16,_binary '\0',1,'POST_COMMENT',6,21);
 /*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -250,7 +285,7 @@ CREATE TABLE `post` (
   PRIMARY KEY (`post_id`),
   KEY `post_ibfk_1_idx` (`posted_by`),
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`posted_by`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,8 +294,34 @@ CREATE TABLE `post` (
 
 LOCK TABLES `post` WRITE;
 /*!40000 ALTER TABLE `post` DISABLE KEYS */;
-INSERT INTO `post` VALUES (1,'Mình có dư một cuốn sách Nhập môn lập trình\nBạn nào muốn lấy thì bình luận phía dưới nha!','2023-12-13 23:57:24.356000','Sách Nhập môn lập trình',NULL,6),(2,'Ai có pdf môn Triết học không, cho mình ké với!\nMình cảm ơn!','2023-12-14 23:57:25.183000','PDF Triết học',NULL,6),(3,'Mình có tài liệu Tóm tắt công thức lớp Vật lý 1 \nAi cần bình luận nha!','2023-12-15 23:57:25.183000','Công thức Vật lý 1',NULL,6),(4,'Có bạn nào có nhiều bài báo nghiên cứu về ứng dụng của Triết học không nhỉ?','2023-12-16 23:57:25.183000','Bài báo ứng dụng Triết học ',NULL,7),(5,'Có bạn nào có tài liệu để nghiên cứu đề tài bên dưới không, cho mình xin với!\nHigh-cell-density fermentations using Bacillus subtilis','2023-12-17 23:57:25.183000','High-cell-density fermentations using Bacillus subtilis',NULL,7),(6,'Có ai có PDF Tư tưởng Hồ Chí Minh mới nhất không ạ?','2023-12-18 11:57:25.183000','Tư tưởng HCM mới nhất',NULL,7),(7,'Mình có kiếm được vài sách Triết học khá hay, bạn nào tò mò thì vào trang cá nhân mình coi nha','2023-12-18 12:57:25.183000','Sách Triết học',NULL,21),(8,'Mình có bản dịch tài liệu hướng dẫn sử dụng CSDL mySQL \nBạn nào muốn xem thì vào trang mình ','2023-12-18 13:57:25.183000','HDSD mySQL',NULL,9),(9,'Mình có vài tài liệu học AI, vào trang mình để xem ','2023-12-18 14:57:25.183000','Học AI',NULL,9),(10,'Tài liệu bản dịch hướng dẫn sử dụng Intellij','2023-12-18 16:57:25.183000','HDSD Intellij',NULL,9),(11,'Mình có sưu tầm những bài thơ hay nhất của Xuân Diệu, bạn nào muốn đọc thì qua trang mình','2023-12-18 17:57:25.183000','Thơ Xuân Diệu',NULL,6),(12,'Ai có sách An toàn thông tin nào giải thích chi tiết dễ hiểu không, cho mình xin với!','2023-12-18 18:57:25.183000','An toàn thông tin ',NULL,6),(15,'Có tài liệu nào hướng dẫn dùng Swagger UI không nhỉ? Tiếng Việt càng tốt ạ! Mình cảm ơn!','2024-03-09 19:50:58.721000','Có tài liệu nào hướng dẫn dùng Swagger UI không nhỉ? Tiếng Việt càng tốt ạ!','2024-03-09 19:51:44.280000',47),(17,'Bạn nào có tài liệu ôn trắc nghiệm Hệ điều hành không?','2024-04-01 08:15:24.356000','Tài liệu trắc nghiệm Hệ điều hành','2024-04-01 08:15:24.356000',19),(18,'Mình có sưu tầm những bài văn mẫu lớp 12 khá hay, bạn nào quan tâm thì liên hệ mình','2024-04-01 08:25:24.356000','Văn mẫu lớp 12','2024-04-01 08:25:24.356000',19),(19,'Bạn nào có các bài báo cáo Thí nghiệm vật lý 1 bên UTE không cho mình xin với?','2024-04-01 08:26:24.356000','Thí nghiệm vật lý 1 UTE','2024-04-01 08:26:24.356000',19),(20,'Bạn nào có đề và đáp án Kiến trúc máy tính SPKT không cho mình xin với','2024-04-01 08:27:24.356000','Kiến trúc máy tính SPKT','2024-04-01 08:27:24.356000',44),(21,'Bạn nào có cuốn Truyện Kiều bản nước ngoài không ạ?','2024-04-01 08:50:24.356000','Truyện Kiều bản dịch ','2024-04-01 08:50:24.356000',16),(22,'Bạn nào đã từng phân tích bản tiếng Anh của truyện Kiều chưa ạ, nếu có cho mình xin tham khảo với ạ!','2024-04-01 08:55:24.356000','Phân tích truyện Kiều bản dịch tiếng Anh ','2024-04-01 08:55:24.356000',16),(23,'Có ai có cuốn Kỹ thuật lập trình như trường SPKT dạy không ạ?','2024-04-01 09:15:24.356000','Sách Kỹ thuật lập trình SPKT','2024-04-01 09:15:24.356000',16),(24,'Cho em xin các bài tập để ôn Kỹ thuật lập trình UTE với ạ!','2024-04-01 09:25:24.356000','Bài tập ôn Kỹ thuật lập trình UTE ','2024-04-01 09:25:24.356000',19),(25,'Làm thế nào để giải nhanh các bài toán hình học không gian? Có tài liệu nào hướng dẫn mẹo này không?','2024-04-01 09:35:24.356000','Hình học không gian','2024-04-01 09:35:24.356000',39),(26,'Các phương pháp nào giúp giải quyết bài toán đạo hàm và tích phân phức tạp? Có ai có Giáo trình toán cao cấp không?','2024-04-01 09:45:24.356000','Toán cao cấp','2024-04-01 09:45:24.356000',39),(27,'Làm thế nào để hiểu sâu về các nguyên lý cơ bản của cơ học lượng tử? Có tài liệu nào giải thích vấn đề này dễ hiểu không ạ?','2024-04-02 09:55:24.356000','Cơ học lượng tử ','2024-04-02 09:55:24.356000',41),(28,'Những chiến lược nào giúp nhớ nhanh cấu trúc phân tử và phản ứng hóa học?','2024-04-02 10:05:24.356000','Những chiến lược nào giúp nhớ nhanh cấu trúc phân tử và phản ứng hóa học?','2024-04-02 10:05:24.356000',41),(29,'Làm sao để nắm vững các quy trình và cơ chế di truyền ở cấp độ phân tử?','2024-04-02 10:15:24.356000','Sinh học phân tử','2024-04-02 10:15:24.356000',42),(30,'Mình có vài link tải từ điển Anh Việt miễn phí, các bạn có thể qua trang cá nhân mình để xem ','2024-04-02 10:25:24.356000','Từ điển tiếng Anh ','2024-04-02 10:25:24.356000',38),(31,'Mình có chia sẻ vài tài liệu học Kỹ thuật lập trình khá dễ hiểu, ai quan tâm thì qua trang mình coi','2024-04-02 10:35:24.356000','Kỹ thuật lập trình ','2024-04-02 10:35:24.356000',21),(32,'Phương pháp nào giúp phân tích và đánh giá tác phẩm nghệ thuật từ góc độ lịch sử và văn hóa?','2024-04-02 10:45:24.356000','Nghệ thuật','2024-04-02 10:45:24.356000',12),(33,'Phương pháp nào giúp cải thiện kỹ năng nghe hiểu tiếng Anh?','2024-04-02 10:55:24.356000','Học tiếng Anh','2024-04-02 10:55:24.356000',18);
+INSERT INTO `post` VALUES (1,'Mình có dư một cuốn sách Nhập môn lập trình\nBạn nào muốn lấy thì bình luận phía dưới nha!','2023-12-13 23:57:24.356000','Sách Nhập môn lập trình',NULL,6),(2,'Ai có pdf môn Triết học không, cho mình ké với!\nMình cảm ơn!','2023-12-14 23:57:25.183000','PDF Triết học',NULL,6),(3,'Mình có tài liệu Tóm tắt công thức lớp Vật lý 1 \nAi cần bình luận nha!','2023-12-15 23:57:25.183000','Công thức Vật lý 1',NULL,6),(4,'Có bạn nào có nhiều bài báo nghiên cứu về ứng dụng của Triết học không nhỉ?','2023-12-16 23:57:25.183000','Bài báo ứng dụng Triết học ',NULL,7),(5,'Có bạn nào có tài liệu để nghiên cứu đề tài bên dưới không, cho mình xin với!\nHigh-cell-density fermentations using Bacillus subtilis','2023-12-17 23:57:25.183000','High-cell-density fermentations using Bacillus subtilis',NULL,7),(6,'Có ai có PDF Tư tưởng Hồ Chí Minh mới nhất không ạ?','2023-12-18 11:57:25.183000','Tư tưởng HCM mới nhất',NULL,7),(7,'Mình có kiếm được vài sách Triết học khá hay, bạn nào tò mò thì vào trang cá nhân mình coi nha','2023-12-18 12:57:25.183000','Sách Triết học',NULL,21),(8,'Mình có bản dịch tài liệu hướng dẫn sử dụng CSDL mySQL \nBạn nào muốn xem thì vào trang mình ','2023-12-18 13:57:25.183000','HDSD mySQL',NULL,9),(9,'Mình có vài tài liệu học AI, vào trang mình để xem ','2023-12-18 14:57:25.183000','Học AI',NULL,9),(10,'Tài liệu bản dịch hướng dẫn sử dụng Intellij','2023-12-18 16:57:25.183000','HDSD Intellij',NULL,9),(11,'Mình có sưu tầm những bài thơ hay nhất của Xuân Diệu, bạn nào muốn đọc thì qua trang mình','2023-12-18 17:57:25.183000','Thơ Xuân Diệu',NULL,6),(12,'Ai có sách An toàn thông tin nào giải thích chi tiết dễ hiểu không, cho mình xin với!','2023-12-18 18:57:25.183000','An toàn thông tin ',NULL,6),(15,'Có tài liệu nào hướng dẫn dùng Swagger UI không nhỉ? Tiếng Việt càng tốt ạ! Mình cảm ơn!','2024-03-09 19:50:58.721000','Có tài liệu nào hướng dẫn dùng Swagger UI không nhỉ? Tiếng Việt càng tốt ạ!','2024-03-09 19:51:44.280000',47),(17,'Bạn nào có tài liệu ôn trắc nghiệm Hệ điều hành không?','2024-04-01 08:15:24.356000','Tài liệu trắc nghiệm Hệ điều hành','2024-04-01 08:15:24.356000',19),(18,'Mình có sưu tầm những bài văn mẫu lớp 12 khá hay, bạn nào quan tâm thì liên hệ mình','2024-04-01 08:25:24.356000','Văn mẫu lớp 12','2024-04-01 08:25:24.356000',19),(19,'Bạn nào có các bài báo cáo Thí nghiệm vật lý 1 bên UTE không cho mình xin với?','2024-04-01 08:26:24.356000','Thí nghiệm vật lý 1 UTE','2024-04-01 08:26:24.356000',19),(20,'Bạn nào có đề và đáp án Kiến trúc máy tính SPKT không cho mình xin với','2024-04-01 08:27:24.356000','Kiến trúc máy tính SPKT','2024-04-01 08:27:24.356000',44),(21,'Bạn nào có cuốn Truyện Kiều bản nước ngoài không ạ?','2024-04-01 08:50:24.356000','Truyện Kiều bản dịch ','2024-04-01 08:50:24.356000',16),(22,'Bạn nào đã từng phân tích bản tiếng Anh của truyện Kiều chưa ạ, nếu có cho mình xin tham khảo với ạ!','2024-04-01 08:55:24.356000','Phân tích truyện Kiều bản dịch tiếng Anh ','2024-04-01 08:55:24.356000',16),(23,'Có ai có cuốn Kỹ thuật lập trình như trường SPKT dạy không ạ?','2024-04-01 09:15:24.356000','Sách Kỹ thuật lập trình SPKT','2024-04-01 09:15:24.356000',16),(24,'Cho em xin các bài tập để ôn Kỹ thuật lập trình UTE với ạ!','2024-04-01 09:25:24.356000','Bài tập ôn Kỹ thuật lập trình UTE ','2024-04-01 09:25:24.356000',19),(25,'Làm thế nào để giải nhanh các bài toán hình học không gian? Có tài liệu nào hướng dẫn mẹo này không?','2024-04-01 09:35:24.356000','Hình học không gian','2024-04-01 09:35:24.356000',39),(26,'Các phương pháp nào giúp giải quyết bài toán đạo hàm và tích phân phức tạp? Có ai có Giáo trình toán cao cấp không?','2024-04-01 09:45:24.356000','Toán cao cấp','2024-04-01 09:45:24.356000',39),(27,'Làm thế nào để hiểu sâu về các nguyên lý cơ bản của cơ học lượng tử? Có tài liệu nào giải thích vấn đề này dễ hiểu không ạ?','2024-04-02 09:55:24.356000','Cơ học lượng tử ','2024-04-02 09:55:24.356000',41),(28,'Những chiến lược nào giúp nhớ nhanh cấu trúc phân tử và phản ứng hóa học?','2024-04-02 10:05:24.356000','Những chiến lược nào giúp nhớ nhanh cấu trúc phân tử và phản ứng hóa học?','2024-04-02 10:05:24.356000',41),(29,'Làm sao để nắm vững các quy trình và cơ chế di truyền ở cấp độ phân tử?','2024-04-02 10:15:24.356000','Sinh học phân tử','2024-04-02 10:15:24.356000',42),(30,'Mình có vài link tải từ điển Anh Việt miễn phí, các bạn có thể qua trang cá nhân mình để xem ','2024-04-02 10:25:24.356000','Từ điển tiếng Anh ','2024-04-02 10:25:24.356000',38),(31,'Mình có chia sẻ vài tài liệu học Kỹ thuật lập trình khá dễ hiểu, ai quan tâm thì qua trang mình coi','2024-04-02 10:35:24.356000','Kỹ thuật lập trình ','2024-04-02 10:35:24.356000',21),(32,'Phương pháp nào giúp phân tích và đánh giá tác phẩm nghệ thuật từ góc độ lịch sử và văn hóa?','2024-04-02 10:45:24.356000','Nghệ thuật','2024-04-02 10:45:24.356000',12),(33,'Phương pháp nào giúp cải thiện kỹ năng nghe hiểu tiếng Anh?','2024-04-02 10:55:24.356000','Học tiếng Anh','2024-04-02 10:55:24.356000',18),(34,'string','2024-04-25 16:52:55.283000','string','2024-04-25 17:23:09.658000',21),(35,'Sách TOEIC của mình bán đảm bảo ôn thi trên 900 nha mấy bạn. Liên hệ qua mail 123@gmail.com','2024-04-26 16:52:55.283000','Tiếng anh TOEIC',NULL,15);
 /*!40000 ALTER TABLE `post` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `post_image`
+--
+
+DROP TABLE IF EXISTS `post_image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `post_image` (
+  `post_image_id` int NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) DEFAULT NULL,
+  `post_id` int DEFAULT NULL,
+  PRIMARY KEY (`post_image_id`),
+  KEY `FKnloq4boxs4ewryyvvfnp5uf2e` (`post_id`),
+  CONSTRAINT `FKnloq4boxs4ewryyvvfnp5uf2e` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `post_image`
+--
+
+LOCK TABLES `post_image` WRITE;
+/*!40000 ALTER TABLE `post_image` DISABLE KEYS */;
+/*!40000 ALTER TABLE `post_image` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -292,6 +353,41 @@ INSERT INTO `post_like` VALUES (1,10,'2023-12-14 08:57:24.356000'),(1,12,'2023-1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `post_report`
+--
+
+DROP TABLE IF EXISTS `post_report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `post_report` (
+  `report_id` int NOT NULL AUTO_INCREMENT,
+  `is_read` bit(1) NOT NULL,
+  `reported_at` datetime(6) DEFAULT NULL,
+  `post_id` int DEFAULT NULL,
+  `type_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `FKmnpxqyrdbita9cgl2lwrc4ho4` (`post_id`),
+  KEY `FKi2jfes1q50bbu0bjjk7qbebn0` (`type_id`),
+  KEY `FKs92swr93jnboiaplg1hnkuwoh` (`user_id`),
+  CONSTRAINT `FKi2jfes1q50bbu0bjjk7qbebn0` FOREIGN KEY (`type_id`) REFERENCES `report_type` (`type_id`),
+  CONSTRAINT `FKmnpxqyrdbita9cgl2lwrc4ho4` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`),
+  CONSTRAINT `FKs92swr93jnboiaplg1hnkuwoh` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `post_report`
+--
+
+LOCK TABLES `post_report` WRITE;
+/*!40000 ALTER TABLE `post_report` DISABLE KEYS */;
+INSERT INTO `post_report` VALUES (1,_binary '\0','2024-04-26 23:18:56.756000',34,14,21,''),(2,_binary '\0','2024-04-26 23:19:44.011000',35,19,21,'Mua bán, có dấu hiệu lừa đảo');
+/*!40000 ALTER TABLE `post_report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `post_tag`
 --
 
@@ -314,8 +410,33 @@ CREATE TABLE `post_tag` (
 
 LOCK TABLES `post_tag` WRITE;
 /*!40000 ALTER TABLE `post_tag` DISABLE KEYS */;
-INSERT INTO `post_tag` VALUES (1,1),(23,1),(24,1),(31,1),(1,2),(2,3),(4,3),(7,3),(3,4),(27,4),(5,6),(6,7),(8,8),(9,9),(10,10),(11,11),(12,12),(18,14),(21,14),(19,15),(24,15),(20,16),(20,17),(23,17),(22,18),(30,18),(33,18),(25,19),(26,19),(28,20),(29,21),(32,22);
+INSERT INTO `post_tag` VALUES (1,1),(23,1),(24,1),(31,1),(1,2),(2,3),(4,3),(7,3),(3,4),(27,4),(34,4),(34,5),(5,6),(6,7),(8,8),(9,9),(10,10),(11,11),(12,12),(18,14),(21,14),(19,15),(24,15),(20,16),(20,17),(23,17),(22,18),(30,18),(33,18),(25,19),(26,19),(28,20),(29,21),(32,22);
 /*!40000 ALTER TABLE `post_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `report_type`
+--
+
+DROP TABLE IF EXISTS `report_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report_type` (
+  `type_id` int NOT NULL AUTO_INCREMENT,
+  `reason` varchar(255) DEFAULT NULL,
+  `type` int NOT NULL,
+  PRIMARY KEY (`type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `report_type`
+--
+
+LOCK TABLES `report_type` WRITE;
+/*!40000 ALTER TABLE `report_type` DISABLE KEYS */;
+INSERT INTO `report_type` VALUES (1,'Giả mạo',0),(2,'Chứa nội dung đồi truỵ',0),(3,'Chứa nội dung thù địch, gây nguy hiểm',0),(4,'Spam',0),(5,'Thông tin sai lệch',0),(6,'Vi phạm bản quyền',0),(7,'Nội dung gây hiểu lầm',0),(8,'Nội dung phản động, chống phá',0),(9,'Chất lượng kém',0),(10,'Khác',0),(11,'Chứa ảnh đồi truỵ',1),(12,'Chứa ảnh bạo lực, nguy hiểm',1),(13,'Ngôn từ gây thù ghét',1),(14,'Spam',1),(15,'Bán hàng',1),(16,'Tin giả',1),(17,'Bạo lực ngôn từ, xúc phạm',1),(18,'Quấy rối',1),(19,'Lừa đảo',1),(20,'Nội dung gây kích động, chia rẽ',1),(21,'Khác',1);
+/*!40000 ALTER TABLE `report_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -446,4 +567,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-13 12:27:16
+-- Dump completed on 2024-04-26 23:29:35
