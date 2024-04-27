@@ -16,6 +16,10 @@ import com.advanced_mobile_programing.docs_sharing.util.PasswordCheck;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -272,6 +276,30 @@ public class UserController {
                 .build());
     }
 
+    @Operation(summary = "Lấy danh sách người dùng")
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size) {
+//        @RequestParam(defaultValue = "newest") String order
+//        @RequestParam(defaultValue = "") String query,
+//        @RequestParam(defaultValue = "") Integer gender,
+//        @RequestParam(defaultValue = "") Boolean disabled,
+//        @RequestParam(defaultValue = "") Boolean authenticated,
+//        @RequestParam(defaultValue = "") Integer role
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<User> users = userService.findAll(pageable);
+
+        Page<UserResponseModel> userResponseModels = users.map(this::convertToUserModel);
+
+        return ResponseEntity.ok(ResponseModel.builder()
+                .status(200)
+                .error(false)
+                .message("Get user list successfully")
+                .data(userResponseModels)
+                .build());
+    }
 
     public String getEmailUsername(String email) {
         return email.split("@")[0];

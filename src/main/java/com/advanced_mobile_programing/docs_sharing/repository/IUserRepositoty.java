@@ -15,10 +15,13 @@ public interface IUserRepositoty extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
 
     Optional<User> findByEmailAndIsDisabledAndIsAuthenticated(String email, boolean isDisabled, boolean isAuthenticated);
+
     @Query("SELECT COUNT(u) FROM User u WHERE u.createdAt >= :start AND u.createdAt < :end")
     long countByCreatedAtBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
 
     @Query("SELECT COUNT(u) FROM User u WHERE YEAR(u.createdAt) = :year")
     long countByCreatedAtYear(@Param("year") int year);
+
+
 }
