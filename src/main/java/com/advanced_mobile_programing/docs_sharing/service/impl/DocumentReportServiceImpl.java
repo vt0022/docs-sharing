@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -37,5 +38,22 @@ public class DocumentReportServiceImpl implements IDocumentReportService {
     @Override
     public Page<DocumentReport> findByIsRead(boolean isRead, Pageable pageable) {
         return documentReportRepository.findByIsRead(isRead, pageable);
+    }
+
+    @Override
+    public long countAll() {
+        return documentReportRepository.count();
+    }
+
+    @Override
+    public long countByReportedAtYearAndMonth(int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+        return documentReportRepository.countByCreatedAtBetween(start, end);
+    }
+
+    @Override
+    public long countByReportedAtYear(int year) {
+        return documentReportRepository.countByReportedAtYear(year);
     }
 }
