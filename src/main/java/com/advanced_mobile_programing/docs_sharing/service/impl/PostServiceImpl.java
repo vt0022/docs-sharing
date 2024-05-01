@@ -1,12 +1,16 @@
 package com.advanced_mobile_programing.docs_sharing.service.impl;
 
 import com.advanced_mobile_programing.docs_sharing.entity.Post;
+import com.advanced_mobile_programing.docs_sharing.entity.Tag;
 import com.advanced_mobile_programing.docs_sharing.entity.User;
 import com.advanced_mobile_programing.docs_sharing.repository.IPostRepository;
 import com.advanced_mobile_programing.docs_sharing.service.IPostService;
+import com.advanced_mobile_programing.docs_sharing.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +21,12 @@ import java.util.Optional;
 public class PostServiceImpl implements IPostService {
 
     private final IPostRepository postRepository;
+    private final ITagService tagService;
 
     @Autowired
-    public PostServiceImpl(IPostRepository postRepository) {
+    public PostServiceImpl(IPostRepository postRepository, ITagService tagService) {
         this.postRepository = postRepository;
+        this.tagService = tagService;
     }
 
     @Override
@@ -79,5 +85,24 @@ public class PostServiceImpl implements IPostService {
             "ORDER BY l.likedAt DESC")
     public Page<Post> findByUserLike(User user, Pageable pageable) {
         return postRepository.findByUserLike(user, pageable);
+    }
+
+    @Override
+    public Page<Post> searchWithTag(String q, int tagId, String order, Pageable pageable) {
+        Tag tag = tagService.findById(tagId).orElseThrow(() -> new RuntimeException("Tag not found"));
+
+        if (order.equals("mostLikes")) {
+            return postRepository.findAllByTagsOrderByLikes(q, tag, pageable);
+        } else {
+            Sort sort;
+            Pageable newPageable;
+            if (order.equals("oldest"))
+                sort = Sort.by(Sort.Direction.ASC, "createdAt");
+            else
+                sort = Sort.by(Sort.Direction.DESC, "createdAt");
+
+            newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+            return postRepository.findAllByTags(q, tag, newPageable);
+        }
     }
 }

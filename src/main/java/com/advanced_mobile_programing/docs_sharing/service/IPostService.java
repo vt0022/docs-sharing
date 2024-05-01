@@ -32,4 +32,6 @@ public interface IPostService {
             "WHERE l.user = :user " +
             "ORDER BY l.likedAt DESC")
     Page<Post> findByUserLike(User user, Pageable pageable);
+
+    Page<Post> searchWithTag(String q, int tagId, String order, Pageable pageable);
 }

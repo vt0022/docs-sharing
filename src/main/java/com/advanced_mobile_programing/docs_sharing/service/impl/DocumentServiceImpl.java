@@ -1,6 +1,9 @@
 package com.advanced_mobile_programing.docs_sharing.service.impl;
 
-import com.advanced_mobile_programing.docs_sharing.entity.*;
+import com.advanced_mobile_programing.docs_sharing.entity.Category;
+import com.advanced_mobile_programing.docs_sharing.entity.Document;
+import com.advanced_mobile_programing.docs_sharing.entity.Field;
+import com.advanced_mobile_programing.docs_sharing.entity.User;
 import com.advanced_mobile_programing.docs_sharing.repository.IDocumentRepository;
 import com.advanced_mobile_programing.docs_sharing.service.ICategoryService;
 import com.advanced_mobile_programing.docs_sharing.service.IDocumentService;
@@ -100,29 +103,6 @@ public class DocumentServiceImpl implements IDocumentService {
                     return documentRepository.findAll(query, newPageable);
                 }
             }
-        }
-    }
-
-    @Override
-    public Page<Document> searchWithTag(String q, int tagId, String order, Pageable pageable) {
-        Tag tag = tagService.findById(tagId).orElseThrow(() -> new RuntimeException("Tag not found"));
-
-        String query = '%' + q.toLowerCase() + '%';
-
-        if (order.equals("mostLikes")) {
-            return documentRepository.findAllByTags(query, tag, pageable);
-        } else {
-            Sort sort;
-            Pageable newPageable;
-            if (order.equals("mostViews"))
-                sort = Sort.by(Sort.Direction.DESC, "totalView");
-            else if (order.equals("oldest"))
-                sort = Sort.by(Sort.Direction.ASC, "uploadedAt");
-            else
-                sort = Sort.by(Sort.Direction.DESC, "uploadedAt");
-
-            newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-            return documentRepository.findAllByTagsOrderByLikes(query, tag, newPageable);
         }
     }
 

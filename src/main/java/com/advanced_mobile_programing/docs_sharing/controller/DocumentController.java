@@ -173,28 +173,6 @@ public class DocumentController {
                 .build());
     }
 
-    @Operation(summary = "Tìm kiếm tài liệu với thẻ",
-            description = "Trả về danh sách tất cả tài liệu tìm được kèm với sắp xếp")
-    @GetMapping("/tag/{tagId}")
-    public ResponseEntity<?> searchDocument(@PathVariable int tagId,
-                                            @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "10") int size,
-                                            @RequestParam(defaultValue = "") String q,
-                                            @RequestParam(defaultValue = "newest") String order) {
-        // Order can be newest, mostLikes, mostViews
-        Pageable pageable = PageRequest.of(page, size);
-
-        Page<Document> documents = documentService.searchWithTag(q, tagId, order, pageable);
-        Page<DocumentResponseModel> documentResponseModels = documents.map(this::convertToDocumentModel);
-        return ResponseEntity.ok(ResponseModel
-                .builder()
-                .status(200)
-                .error(false)
-                .message("Search documents with tag successfully")
-                .data(documentResponseModels)
-                .build());
-    }
-
     @Operation(summary = "Thích tài liệu",
             description = "Nhấn thích/bỏ thích một tài liệu")
     @PostMapping("/{docId}/like")

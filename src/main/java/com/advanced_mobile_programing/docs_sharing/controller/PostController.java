@@ -316,6 +316,28 @@ public class PostController {
                 .build());
     }
 
+    @Operation(summary = "Tìm kiếm bài viết với thẻ",
+            description = "Trả về danh sách tất cả bài viết tìm được kèm với sắp xếp")
+    @GetMapping("/tag/{tagId}")
+    public ResponseEntity<?> searchDocument(@PathVariable int tagId,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "10") int size,
+                                            @RequestParam(defaultValue = "") String q,
+                                            @RequestParam(defaultValue = "newest") String order) {
+        // Order can be newest, mostLikes, mostViews
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Post> posts = postService.searchWithTag(q, tagId, order, pageable);
+        Page<PostResponseModel> postResponseModels = posts.map(this::convertToPostModel);
+        return ResponseEntity.ok(ResponseModel
+                .builder()
+                .status(200)
+                .error(false)
+                .message("Search posts with tag successfully")
+                .data(postResponseModels)
+                .build());
+    }
+
     private PostResponseModel convertToPostModel(Post post) {
         PostResponseModel postResponseModel = modelMapper.map(post, PostResponseModel.class);
 
