@@ -14,4 +14,10 @@ public interface IDocumentReportService {
     Optional<DocumentReport> findById(Integer integer);
 
     Page<DocumentReport> findByIsRead(boolean isRead, Pageable pageable);
+
+    long countAll();
+
+    long countByReportedAtYearAndMonth(int year, int month);
+
+    long countByReportedAtYear(int year);
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -37,5 +38,22 @@ public class PostReportServiceImpl implements IPostReportService {
     @Override
     public Optional<PostReport> findById(Integer integer) {
         return postReportRepository.findById(integer);
+    }
+
+    @Override
+    public long countAll() {
+        return postReportRepository.count();
+    }
+
+    @Override
+    public long countByReportedAtYearAndMonth(int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+        return postReportRepository.countByCreatedAtBetween(start, end);
+    }
+
+    @Override
+    public long countByReportedAtYear(int year) {
+        return postReportRepository.countByReportedAtYear(year);
     }
 }

@@ -14,4 +14,10 @@ public interface IPostReportService {
     Page<PostReport> findByIsRead(boolean isRead, Pageable pageable);
 
     Optional<PostReport> findById(Integer integer);
+
+    long countAll();
+
+    long countByReportedAtYearAndMonth(int year, int month);
+
+    long countByReportedAtYear(int year);
 }

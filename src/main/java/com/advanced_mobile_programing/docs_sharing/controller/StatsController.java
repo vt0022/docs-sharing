@@ -26,15 +26,19 @@ public class StatsController {
     private final ITagService tagService;
     private final ICategoryService categoryService;
     private final IFieldService fieldService;
+    private final IPostReportService postReportService;
+    private final IDocumentReportService documentReportService;
 
     @Autowired
-    public StatsController(IDocumentService documentService, IPostService postService, IUserService userService, ITagService tagService, ICategoryService categoryService, IFieldService fieldService) {
+    public StatsController(IDocumentService documentService, IPostService postService, IUserService userService, ITagService tagService, ICategoryService categoryService, IFieldService fieldService, IPostReportService postReportService, IDocumentReportService documentReportService) {
         this.documentService = documentService;
         this.postService = postService;
         this.userService = userService;
         this.tagService = tagService;
         this.categoryService = categoryService;
         this.fieldService = fieldService;
+        this.postReportService = postReportService;
+        this.documentReportService = documentReportService;
     }
 
 
@@ -69,6 +73,10 @@ public class StatsController {
             stats.put("totalCategories", categoryService.countAll());
 
             stats.put("totalFields", fieldService.countAll());
+
+            stats.put("totalPostReports", postReportService.countAll());
+
+            stats.put("totalDocumentReports", documentReportService.countAll());
         } else if("thisMonth".equals(period)) {
         // Tính toán cho tháng này
             stats.put("totalDocuments", documentService.countByUploadedAtYearAndMonth(currentYear, currentMonth));
@@ -82,6 +90,10 @@ public class StatsController {
             stats.put("totalCategories", categoryService.countByCreatedAtYearAndMonth(currentYear, currentMonth));
 
             stats.put("totalFields", fieldService.countByCreatedAtYearAndMonth(currentYear, currentMonth));
+
+            stats.put("totalPostReports", postReportService.countByReportedAtYearAndMonth(currentYear, currentMonth));
+
+            stats.put("totalDocumentReports", documentReportService.countByReportedAtYearAndMonth(currentYear, currentMonth));
         } else if("thisYear".equals(period)) {
         // Tính toán cho năm này
             stats.put("totalDocuments", documentService.countByUploadedAtYear(currentYear));
@@ -95,6 +107,10 @@ public class StatsController {
             stats.put("totalCategories", categoryService.countByCreatedAtYear(currentYear));
 
             stats.put("totalFields", fieldService.countByCreatedAtYear(currentYear));
+
+            stats.put("totalPostReports", postReportService.countByReportedAtYear(currentYear));
+
+            stats.put("totalDocumentReports", documentReportService.countByReportedAtYear(currentYear));
         }
 
         return ResponseEntity.ok(ResponseModel
